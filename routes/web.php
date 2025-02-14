@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitController;
 
-Route::get('/', [VisitController::class, 'index']);
+Route::get('/', [VisitController::class, 'index'])->name('home');
 Route::get('/book-visit', [VisitController::class, 'showBookVisitForm']);
 Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.visit');
 Route::get('/join-visit', [VisitController::class, 'showJoinVisitForm']);

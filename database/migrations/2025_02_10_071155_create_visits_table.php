@@ -9,24 +9,27 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('visits', function (Blueprint $table) {
-            $table->id();
-            $table->string('visit_number')->unique();
-            $table->string('visitor_name');
-            $table->string('visitor_email');
-            $table->string('visitor_number');
-            $table->foreignId('host_id')->constrained('hosts');
-            $table->string('status');
-            $table->string('purpose_of_visit');
-            $table->string('visit_facility');
-            $table->string('visit_type'); // Field for visit type
-            $table->date('visit_date');
-            $table->time('visit_from');
-            $table->time('visit_to');
-            $table->timestamps();
-        });
+public function up(): void
+{
+    Schema::create('visits', function (Blueprint $table) {
+        $table->id();
+        $table->string('visitor_name');
+        $table->string('visitor_last_name');
+        $table->string('designation');
+        $table->string('organization');
+        $table->string('visitor_email');
+        $table->string('visitor_number');
+        $table->string('id_number');
+        $table->string('visit_type');
+        $table->string('visit_facility');
+        $table->date('visit_date');
+        $table->time('visit_from');
+        $table->time('visit_to');
+        $table->text('purpose_of_visit');
+        $table->string('visit_number')->unique(); // Add visit_number column
+        $table->foreignId('host_id')->constrained('hosts');
+        $table->timestamps();
+    });
     }
 
     /**
