@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
+        Schema::create('visit_participants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visitor_id')->constrained('visitors');
             $table->string('visit_number');
-            $table->text('comments');
-            $table->integer('rating')->check('rating BETWEEN 1 AND 5');
+            $table->foreignId('visitor_id')->constrained('visitors');
             $table->timestamps();
             
             $table->foreign('visit_number')->references('visit_number')->on('visits');
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('visit_participants');
     }
 };

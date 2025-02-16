@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone_number');
+            $table->string('visitor_name');
+            $table->string('visitor_last_name');
+            $table->string('designation');
+            $table->string('organization');
+            $table->string('visitor_email')->unique();
+            $table->string('visitor_number');
+            $table->string('id_number');
             $table->timestamps();
         });
     }

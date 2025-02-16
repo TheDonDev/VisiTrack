@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Visit extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'visitor_name',
         'visitor_last_name',
@@ -22,6 +24,7 @@ class Visit extends Model
         'visit_to',
         'purpose_of_visit',
         'host_id',
+        'check_in_time',
     ];
 
     public static function generateVisitNumber()
@@ -41,6 +44,14 @@ class Visit extends Model
 
     public function visitor()
     {
-        return $this->belongsTo(Visitor::class); // Assuming a Visitor model exists
+        return $this->belongsTo(Visitor::class);
+    }
+
+    /**
+     * Get the feedback associated with the visit.
+     */
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
     }
 }

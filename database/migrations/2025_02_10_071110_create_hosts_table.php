@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('hosts', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Updated to match model
-            $table->string('email')->unique(); // Updated to match model
-            $table->string('phone_number'); // Updated to match model
+            $table->string('host_name');
+            $table->string('host_email')->unique();
+            $table->string('host_number');
             $table->timestamps();
         });
     }

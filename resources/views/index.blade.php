@@ -81,21 +81,51 @@ document.addEventListener('DOMContentLoaded', function () {
     <!-- Visitor Check-In -->
     <section class="bg-white shadow-lg rounded-lg p-6 mb-12">
         <h3 class="text-2xl font-bold text-primary mb-4">Visitor Check-In</h3>
-<form action="{{ url('visit-status') }}" method="GET" id="visit-status-form">
-    @csrf
-    <input class="border p-2 rounded w-full mb-4" type="text" name="visit_number" placeholder="Enter Visit Number" required>
-            <button class="mt-4 bg-primary text-white px-4 py-2 rounded" type="submit">Check-In</button>
+        <form action="{{ route('visits.check-in') }}" method="POST">
+            @csrf
+            <div class="mb-4">
+                <label for="visit_number" class="block text-gray-700 mb-2">Visit Number:</label>
+                <input type="text" name="visit_number" id="visit_number" 
+                       class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
+            </div>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+                Check In
+            </button>
         </form>
     </section>
 
     <!-- Feedback -->
     <section class="bg-white shadow-lg rounded-lg p-6">
         <h3 class="text-2xl font-bold text-primary mb-4">Feedback</h3>
-<form action="{{ route('feedback') }}" method="POST">
+        <form action="{{ route('visits.submit-feedback') }}" method="POST">
             @csrf
-            <input type="hidden" name="visitor_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
-            <textarea placeholder="Share your experience..." class="border p-2 rounded w-full mb-4" rows="5" name="feedback" required></textarea>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded">Submit Feedback</button>
+            <div class="mb-4">
+                <label for="visit_number" class="block text-gray-700 mb-2">Visit Number:</label>
+                <input type="text" name="visit_number" id="visit_number" 
+                       class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="visitor_id" class="block text-gray-700 mb-2">Visitor ID:</label>
+                <input type="text" name="visitor_id" id="visitor_id" 
+                       class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visitor ID" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="comments" class="block text-gray-700 mb-2">Comments:</label>
+                <textarea name="comments" id="comments" rows="4"
+                          class="w-full px-3 py-2 border rounded-lg" placeholder="Share your experience..." required></textarea>
+            </div>
+            
+            <div class="mb-4">
+                <label for="rating" class="block text-gray-700 mb-2">Rating (1-5):</label>
+                <input type="number" name="rating" id="rating" min="1" max="5"
+                       class="w-full px-3 py-2 border rounded-lg" required>
+            </div>
+            
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+                Submit Feedback
+            </button>
         </form>
     </section>
 </main>
