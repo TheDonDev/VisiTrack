@@ -90,14 +90,9 @@
                     <textarea name="purpose_of_visit" placeholder="Purpose of Visit" class="border p-2 rounded w-full md:col-span-full" rows="2" required></textarea>
                     <select name="host_id" class="border p-2 rounded w-full md:col-span-full" required>
                         <option value="" disabled selected>Host's Name</option>
-                        <option value="1">Prof. Barasa Lwagula (VC)</option>
-                        <option value="2">Prof. John Chang'ach (DVC)</option>
-                        <option value="3">Dr. Titus Muhambe</option>
-                        <option value="4">Dr. Bostley Asenahabi</option>
-                        <option value="5">Dr. Victor Mengwa</option>
-                        <option value="6">Dr. Pamela Nyongesa</option>
-                        <option value="7">Dr. Caren Jerop</option>
-                        <option value="8">Genvieve Nasimiyu (Dean of Students)</option>
+                        @foreach($hosts as $host)
+                            <option value="{{ $host->id }}">{{ $host->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <!-- Submit and Cancel Buttons -->

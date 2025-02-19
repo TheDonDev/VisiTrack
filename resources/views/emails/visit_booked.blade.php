@@ -5,17 +5,15 @@
 </head>
 <body>
     <h1>Your Visit has been Booked!</h1>
-    <p>Dear {{ $visit->visitor_name }},</p>
+    <p>Dear {{ $visitor_name }},</p>
     <p>Your visit details are as follows:</p>
     <ul>
-        <li>Visit Number: {{ $visit->visit_number }}</li>
+        <li>Visit Number: {{ $visit_number }}</li>
         <li>Host: {{ $host_name }}</li>
         <li>Email: {{ $visitor_email }}</li>
         <li>Phone: {{ $host_number }}</li>
-        <li>Purpose of Visit: {{ $visit->purpose_of_visit }}</li>
-        <li>Visit Facility: {{ $visit->visit_facility }}</li>
-        <li>Visit Date: {{ $visit->visit_date }}</li>
-        <li>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</li>
+        <li>Visit Date: {{ $visit_date }}</li>
+        <li>Visit Time: {{ $visit_time }}</li>
     </ul>
     <p>Thank you for booking your visit!</p>
 </body>

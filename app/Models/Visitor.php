@@ -7,15 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Visitor extends Model
 {
     protected $fillable = [
-        'name',
+        'visitor_name',
         'visitor_last_name',
         'designation',
         'organization',
-        'email',
+        'visitor_email',
         'visit_number',
         'id_number',
-        'phone_number',
+        'visitor_number',
     ];
+
+    public static function findOrCreate(array $data)
+    {
+        return self::firstOrCreate(
+            ['visitor_email' => $data['visitor_email']],
+            $data
+        );
+    }
 
     // Define relationships if applicable
 }

@@ -22,6 +22,7 @@ class Visit extends Model
         'visit_date',
         'visit_from',
         'visit_to',
+        'visitor_id', // Added visitor_id to fillable fields
         'purpose_of_visit',
         'host_id',
         'check_in_time',

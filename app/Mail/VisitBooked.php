@@ -2,8 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Visit; // Import the Visit model
-use App\Models\Host; // Import the Host model
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,14 +13,14 @@ class VisitBooked extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $visit; // Declare the visit property
+    protected $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Visit $visit)
+    public function __construct(array $data)
     {
-        $this->visit = $visit; // Assign the visit object
+        $this->data = $data;
     }
 
     /**
@@ -43,14 +41,14 @@ class VisitBooked extends Mailable
         return new Content(
             view: 'emails.visit_booked',
             with: [
-                'visitor_name' => $this->visit->visitor_name,
-                'visit_date' => $this->visit->visit_date,
-                'visit_time' => $this->visit->visit_from . ' - ' . $this->visit->visit_to,
-                'host_name' => Host::find($this->visit->host_id)->name,
-                'visit_number' => $this->visit->visit_number, // Include visit number
-                'visitor_email' => $this->visit->visitor_email, // Include visitor email
-                'host_number' => Host::find($this->visit->host_id)->phone, // Include host phone number
-            ] // Correctly close the with array
+                'visitor_name' => $this->data['visit']->visitor_name,
+                'visit_date' => $this->data['visit']->visit_date,
+                'visit_time' => $this->data['visit']->visit_from . ' - ' . $this->data['visit']->visit_to,
+                'host_name' => $this->data['host_name'],
+                'visit_number' => $this->data['visitNumber'],
+                'visitor_email' => $this->data['visitor_email'],
+                'host_number' => $this->data['host_number'],
+            ]
         );
     }
 
