@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>New Visit Booking Notification</h1>
-    <p>Dear {{ $host->name }},</p>
+    <p>Dear {{ $host->host_name }},</p>
     <p>A new visit has been booked!</p>
     <p>Visitor Details:</p>
     <ul>
@@ -21,6 +21,6 @@
         <li>Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}</li>
         <li>Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}</li>
     </ul>
-    <p>Thank you for using CheckMate!</p>
+    <p>Thank you for using VisiTrack!</p>
 </body>
 </html>

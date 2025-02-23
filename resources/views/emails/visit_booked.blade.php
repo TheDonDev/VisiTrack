@@ -9,9 +9,9 @@
     <p>Your visit details are as follows:</p>
     <ul>
         <li>Visit Number: {{ $visit_number }}</li>
-        <li>Host: {{ $host_name }}</li>
-        <li>Email: {{ $visitor_email }}</li>
-        <li>Phone: {{ $host_number }}</li>
+        <li>Host Name: {{ $host_name }}</li>
+        <li>Host Email: {{ $host_email }}</li>
+        <li>Host Phone Number: {{ $host_number }}</li>
         <li>Visit Date: {{ $visit_date }}</li>
         <li>Visit Time: {{ $visit_time }}</li>
     </ul>

@@ -49,7 +49,17 @@
         @endif
         <section class="bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-bold text-primary mb-4">Book a Visit</h2>
-            <form action="{{ url('/book-visit') }}" method="POST">
+<form action="{{ url('/book-visit') }}" method="POST">
+    @csrf
+    @if ($errors->any())
+        <div class="bg-red-500 text-white p-4 rounded mb-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
                 @csrf
                 <!-- Form Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -91,7 +101,7 @@
                     <select name="host_id" class="border p-2 rounded w-full md:col-span-full" required>
                         <option value="" disabled selected>Host's Name</option>
                         @foreach($hosts as $host)
-                            <option value="{{ $host->id }}">{{ $host->name }}</option>
+                            <option value="{{ $host->id }}">{{ $host->host_name }}</option>
                         @endforeach
                     </select>
                 </div>

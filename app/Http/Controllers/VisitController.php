@@ -66,17 +66,28 @@ public function bookVisit(Request $request)
         Log::error("Host not found for ID: " . $request->host_id);
         return redirect()->back()->withErrors(['host' => 'Host not found.']);
     }
+    Log::info("Retrieved host: " . $host->host_name . " with email: " . $host->host_email);
+    // Log the email addresses being used
+    Log::info("Visitor email: " . $validatedData['visitor_email']);
+    Log::info("Host email: " . $host->host_email);
+    if (empty($validatedData['visitor_email'])) {
+        Log::error("Visitor email is empty.");
+    }
+    if (empty($host->host_email)) {
+        Log::error("Host email is empty.");
+        return redirect()->back()->withErrors(['host' => 'Host email is not set.']);
+    }
 
-    // Send email notifications to visitor and host
+    // Send email to visitor
     Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         'visit' => $visit,
         'visitNumber' => $visitNumber,
-        'host_name' => $host->name,
-        'host_number' => $host->phone_number,
-        'visitor_email' => $validatedData['visitor_email']
+        'host_name' => $host->host_name,
+        'host_email' => $host->host_email,
+        'host_number' => $host->host_number,
     ]));
 
-    Mail::to($host->email)->send(new HostVisitNotification($validatedData, $visitNumber, $host));
+    Mail::to($host->host_email)->send(new HostVisitNotification($validatedData, $visitNumber, $host));
 
     // Return success response
     return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber")->with('visit_number', $visitNumber);
@@ -117,7 +128,7 @@ public function bookVisit(Request $request)
 
         // Send email notifications
         Mail::to($visit->email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
-        Mail::to($visit->host->email)->send(new HostVisitNotification($joiningVisitor->toArray(), $visit->visit_number, $visit->host));
+        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor->toArray(), $visit->visit_number, $visit->host));
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
@@ -145,7 +156,7 @@ public function bookVisit(Request $request)
         // Logic to notify the host
         $visit = Visitor::where('visit_number', $request->visit_number)->first();
         if ($visit) {
-            Mail::to($visit->host->email)->send(new VisitorJoined($visit, $visit->visit_number));
+            Mail::to($visit->host->host_email)->send(new VisitorJoined($visit, $visit->visit_number));
             return response()->json(['message' => 'Host has been notified!']);
         }
         return response()->json(['message' => 'Visit number not found.'], 404);

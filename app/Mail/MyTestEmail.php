@@ -9,18 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VisitBooked extends Mailable
+class MyTestEmail extends Mailable
 {
     use Queueable, SerializesModels;
-
-    protected $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $data)
+    public function __construct()
     {
-        $this->data = $data;
+        //
     }
 
     /**
@@ -29,7 +27,7 @@ class VisitBooked extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Visit Booked',
+            subject: 'My Test Email',
         );
     }
 
@@ -39,16 +37,7 @@ class VisitBooked extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.visit_booked',
-            with: [
-                'visitor_name' => $this->data['visit']->visitor_name,
-                'visit_date' => $this->data['visit']->visit_date,
-                'visit_time' => $this->data['visit']->visit_from . ' - ' . $this->data['visit']->visit_to,
-                'host_name' => $this->data['host_name'],
-                'visit_number' => $this->data['visitNumber'],
-                'host_email' => $this->data['host_email'],
-                'host_number' => $this->data['host_number'],
-            ]
+            view: 'view.name',
         );
     }
 

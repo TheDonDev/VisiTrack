@@ -7,11 +7,9 @@ use App\Http\Controllers\VisitController;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
-Route::get('/book-visit', function () {
-    return view('book-visit');
-})->name('book.visit');
+Route::get('/book-visit', [VisitController::class, 'showBookVisitForm'])->name('book.visit');
 
 Route::get('/join-visit', function () {
     return view('join-visit');

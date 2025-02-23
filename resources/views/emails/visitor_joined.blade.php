@@ -10,9 +10,9 @@
     <p>Dear {{ $visitor->name }},</p>
     <p>You have successfully joined the visit!</p>
     <p>Visit Number: {{ $visitNumber }}</p>
-    <p>Host: {{ $host->name }}</p>
+    <p>Host Name: {{ $host->name }}</p>
     <p>Host Email: {{ $host->email }}</p>
-    <p>Host Number: {{ $host->number }}</p>
-    <p>Thank you for using CheckMate!</p>
+    <p>Host Phone Number: {{ $host->number }}</p>
+    <p>Thank you for using VisiTrack!</p>
 </body>
 </html>
