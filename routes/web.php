@@ -2,8 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitController;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
 
-
+Route::get('/send-test-email', function () {
+    Mail::to('donaldmwanga33@gmail.com')->send(new TestMail());
+    return 'Test email sent!';
+});
 
 Route::get('/', function () {
     return view('index');
