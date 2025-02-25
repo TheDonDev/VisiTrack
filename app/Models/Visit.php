@@ -22,17 +22,21 @@ class Visit extends Model
         'visit_date',
         'visit_from',
         'visit_to',
-        'visitor_id', // Added visitor_id to fillable fields
+        'visitor_id',
         'purpose_of_visit',
         'host_id',
         'check_in_time',
     ];
 
+    protected $casts = [
+        'visit_date' => 'date',
+    ];
+
     public static function generateVisitNumber()
     {
         do {
-            $visitNumber = Str::random(8); // Generate a random string of 8 characters
-        } while (self::where('visit_number', $visitNumber)->exists()); // Ensure uniqueness
+            $visitNumber = random_int(1000000000, 9999999999);
+        } while (self::where('visit_number', $visitNumber)->exists());
 
         return $visitNumber;
     }

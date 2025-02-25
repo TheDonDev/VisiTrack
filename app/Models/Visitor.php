@@ -25,5 +25,8 @@ class Visitor extends Model
         );
     }
 
-    // Define relationships if applicable
+    public function visits()
+    {
+        return $this->hasMany(Visit::class);
+    }
 }

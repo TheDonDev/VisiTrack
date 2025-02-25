@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('visitor_email')->unique();
             $table->string('visitor_number');
             $table->string('id_number');
+            $table->string('visit_number')->nullable();
             $table->timestamps();
         });
     }

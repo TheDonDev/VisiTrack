@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visitor Joined Notification</title>
-</head>
-<body>
-    <h1>Visitor Joined Notification</h1>
-    <p>Dear {{ $visitor->name }},</p>
-    <p>You have successfully joined the visit!</p>
-    <p>Visit Number: {{ $visitNumber }}</p>
-    <p>Host Name: {{ $host->name }}</p>
-    <p>Host Email: {{ $host->email }}</p>
-    <p>Host Phone Number: {{ $host->number }}</p>
-    <p>Thank you for using VisiTrack!</p>
-</body>
-</html>
+@component('mail::message')
+# Visitor Joined Notification
+
+Dear {{ $visitor->name }},
+
+You have successfully joined the visit!
+
+**Visit Details:**
+- Visit Number: {{ $visitNumber }}
+- Host Name: {{ $host->name }}
+- Host Email: {{ $host->email }}
+- Host Phone Number: {{ $host->number }}
+
+Thank you for using VisiTrack!
+
+Best regards,
+The VisiTrack Team
+@endcomponent

@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visitor Checked In Notification</title>
-</head>
-<body>
-    <h1>Hello,</h1>
-    <p>This is to inform you that a visitor has checked in.</p>
-    <p>Visitor Name: <strong>{{ $visitorName }}</strong></p>
-    <p>Visit Number: <strong>{{ $visitNumber }}</strong></p>
-    <p>Thank you!</p>
-</body>
-</html>
+@component('mail::message')
+# Visitor Checked In Notification
+
+Hello {{ $visit->host->host_name }},
+
+This is to inform you that a visitor has checked in for visit {{ $visit->visit_number }}.
+
+**Visitor Details:**
+- Name: {{ $visit->visitor->visitor_name }} {{ $visit->visitor->visitor_last_name }}
+- Organization: {{ $visit->visitor->organization }}
+- Visit Date: {{ $visit->visit_date->format('Y-m-d') }}
+- Visit Time: {{ $visit->visit_from }} to {{ $visit->visit_to }}
+
+Thank you for using VisiTrack!
+
+Best regards,
+The VisiTrack Team
+@endcomponent

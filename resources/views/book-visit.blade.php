@@ -44,7 +44,7 @@
     <main class="container mx-auto mt-8">
         @if (session('success'))
             <div class="bg-green-500 text-white p-4 rounded mb-4">
-                {{ session('success') }}
+                {!! str_replace(session('visit_number'), '<span style="color: red; font-weight: bold;">'.session('visit_number').'</span>', session('success')) !!}
             </div>
         @endif
         <section class="bg-white shadow-lg rounded-lg p-6">

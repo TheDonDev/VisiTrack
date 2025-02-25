@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Visitor; // import the Visit model
+use App\Models\Visitor;
 use App\Models\Host;
-use App\Models\Feedback; // Import the Feedback model
-use App\Models\Visit; // Import the Visit model
+use App\Models\Feedback;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log; // Import Log facade
-use Illuminate\Support\Str; // Import Str facade
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use App\Mail\VisitBooked;
 use App\Mail\VisitorJoined;
-use App\Mail\HostVisitNotification; // Import the new HostVisitNotification class
+use App\Mail\HostVisitNotification;
+use App\Mail\VisitorCheckedIn;
+use App\Mail\HostVisitorCheckedIn;
 
 class VisitController extends Controller
 {
@@ -90,7 +92,7 @@ public function bookVisit(Request $request)
     Mail::to($host->host_email)->send(new HostVisitNotification($validatedData, $visitNumber, $host));
 
     // Return success response
-    return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber")->with('visit_number', $visitNumber);
+    return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
 }
 
 
@@ -160,5 +162,50 @@ public function bookVisit(Request $request)
             return response()->json(['message' => 'Host has been notified!']);
         }
         return response()->json(['message' => 'Visit number not found.'], 404);
+    }
+
+    public function showCheckInForm()
+    {
+        return view('check-in');
+    }
+
+    public function processCheckIn(Request $request)
+    {
+        $request->validate([
+            'visit_number' => 'required|string|exists:visits,visit_number'
+        ]);
+
+        // Find the visit
+        $visit = Visit::where('visit_number', $request->visit_number)->first();
+
+        if (!$visit) {
+            return redirect()->back()->withErrors(['visit_number' => 'Visit number not found.']);
+        }
+
+        // Update visit status
+        $visit->update(['status' => 'checked_in']);
+
+        // Get related visitors
+        $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
+        $totalVisitors = $visitors->count();
+
+        // Retrieve the associated visitor
+        $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
+
+        // Send notifications
+        Mail::to($visit->visitor->visitor_email)->send(new VisitorCheckedIn($visit));
+        Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit));
+
+        // Redirect to visit status page
+        return redirect()->route('visits.status', ['visit' => $visit->id])
+            ->with('success', 'Check-in successful!');
+    }
+
+    public function showVisitStatus($visit)
+    {
+        $visit = Visit::findOrFail($visit);
+        $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
+        $totalVisitors = $visitors->count();
+        return view('visit-status', compact('visit', 'totalVisitors', 'visitors'));
     }
 }

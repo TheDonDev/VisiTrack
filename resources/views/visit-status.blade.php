@@ -63,15 +63,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Name:</h4>
-                        <p class="text-gray-700">{{ $visit->host->name }}</p>
+                        <p class="text-gray-700">{{ $visit->host->host_name }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Email:</h4>
-                        <p class="text-gray-700">{{ $visit->host->email }}</p>
+                        <p class="text-gray-700">{{ $visit->host->host_email }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Phone:</h4>
-                        <p class="text-gray-700">{{ $visit->host->phone }}</p>
+                        <p class="text-gray-700">{{ $visit->host->host_number }}</p>
                     </div>
                 </div>
             </div>

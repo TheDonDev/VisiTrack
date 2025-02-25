@@ -41,13 +41,15 @@ class VisitBooked extends Mailable
         return new Content(
             view: 'emails.visit_booked',
             with: [
-                'visitor_name' => $this->data['visit']->visitor_name,
+                'visitor_name' => $this->data['visit']->visitor->visitor_name,
                 'visit_date' => $this->data['visit']->visit_date,
                 'visit_time' => $this->data['visit']->visit_from . ' - ' . $this->data['visit']->visit_to,
                 'host_name' => $this->data['host_name'],
                 'visit_number' => $this->data['visitNumber'],
                 'host_email' => $this->data['host_email'],
                 'host_number' => $this->data['host_number'],
+                'visit_type' => $this->data['visit']->visit_type,
+                'visit_facility' => $this->data['visit']->visit_facility,
             ]
         );
     }
