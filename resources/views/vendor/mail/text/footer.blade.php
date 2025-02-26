@@ -1,1 +1,1 @@
-{{ $slot }}
+Thank you for using our service!
