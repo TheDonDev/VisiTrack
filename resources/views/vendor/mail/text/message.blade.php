@@ -1,3 +1,1 @@
-Your Message
-
-@yield('content')
+{{ $slot }}

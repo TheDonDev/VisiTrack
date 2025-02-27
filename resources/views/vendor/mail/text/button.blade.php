@@ -1,1 +1,1 @@
-Button Text
+{{ $slot }}

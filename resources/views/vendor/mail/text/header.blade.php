@@ -1,1 +1,1 @@
-Welcome to Our Service
+{{ $slot }}

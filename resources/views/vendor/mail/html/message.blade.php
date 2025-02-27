@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <table class="message" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="content-cell">
-                <h2>Your Message</h2>
-                @yield('content')
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
+@component('mail::layout')
+    {{-- Header --}}
+    @slot('header')
+        @component('mail::header', ['url' => config('app.url')])
+            {{ config('app.name') }}
+        @endcomponent
+    @endslot
+
+    {{ $slot }}
+
+    {{-- Footer --}}
+    @slot('footer')
+        @component('mail::footer')
+            © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+        @endcomponent
+    @endslot
+@endcomponent
