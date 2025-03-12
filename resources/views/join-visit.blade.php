@@ -45,18 +45,21 @@
             flex-direction: column;
             flex-grow: 1;
             justify-content: space-between;
+            height: calc(100vh - 12rem); /* Adjust height to fit within the viewport */
         }
 
         .form-content {
             flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 2rem; /* Add padding to avoid touching the footer */
         }
 
         .form-buttons {
-            margin-top: auto;
+            margin-top: 1rem;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen flex flex-col">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen flex flex-col overflow-hidden">
 
     <!-- Header -->
     <header class="bg-primary text-white py-4">
@@ -67,7 +70,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto mt-4 flex-grow flex flex-col">
+    <main class="container mx-auto mt-4 flex-grow flex flex-col overflow-hidden">
         <section class="bg-white shadow-lg rounded-lg p-4 form-container">
             <div class="form-content">
                 <h2 class="text-xl font-bold text-primary mb-4">Join a Visit</h2>
@@ -84,7 +87,7 @@
                         <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
                     </div>
                     <!-- Submit and Cancel Buttons -->
-                    <div class="flex justify-center gap-4 mt-4">
+                    <div class="flex justify-center gap-4 mt-4 form-buttons">
                         <a href="/" class="btn-secondary text-white px-4 py-2 rounded">Cancel</a>
                         <button type="submit" class="btn-primary text-white px-4 py-2 rounded">Submit</button>
                     </div>
@@ -94,7 +97,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-white py-4 mt-auto">
+    <footer class="bg-primary text-white py-4">
         <div class="container mx-auto text-center">
             <p>&copy; 2025 Alupe University. All rights reserved.</p>
         </div>
