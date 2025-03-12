@@ -43,10 +43,10 @@ return [
     |
     */
 
-    'namespaces' => [
-        'mail' => [
-            resource_path('views/vendor/mail'),
-        ],
+'namespaces' => [
+    'mail' => [
+        resource_path('views/vendor/mail/html'),
     ],
+],
 
 ];
