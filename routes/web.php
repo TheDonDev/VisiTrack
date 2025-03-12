@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use function view;
 use App\Http\Controllers\VisitController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
