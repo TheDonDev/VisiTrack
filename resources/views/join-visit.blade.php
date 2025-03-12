@@ -84,7 +84,7 @@
                         <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
                     </div>
                     <!-- Submit and Cancel Buttons -->
-                    <div class="flex justify-center gap-4 mt-4 form-buttons">
+                    <div class="flex justify-center gap-4 mt-4">
                         <a href="/" class="btn-secondary text-white px-4 py-2 rounded">Cancel</a>
                         <button type="submit" class="btn-primary text-white px-4 py-2 rounded">Submit</button>
                     </div>
