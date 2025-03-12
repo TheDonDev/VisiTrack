@@ -28,6 +28,16 @@
         .text-secondary {
             color: var(--secondary-color);
         }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
 </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
@@ -106,9 +116,9 @@
                     </select>
                 </div>
                 <!-- Submit and Cancel Buttons -->
-                <div class="flex justify-end gap-4 mt-6">
-                    <a href="/" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</a>
-                    <button type="submit" class="bg-primary text-white px-4 py-2 rounded">Submit</button>
+                <div class="flex justify-center gap-4 mt-6">
+                    <a href="/" class="btn-secondary text-white px-4 py-2 rounded">Cancel</a>
+                    <button type="submit" class="btn-primary text-white px-4 py-2 rounded">Submit</button>
                 </div>
             </form>
         </section>
