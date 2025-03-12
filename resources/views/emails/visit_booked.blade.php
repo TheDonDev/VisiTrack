@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Visit has been Booked!</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #2563eb;
+        }
+        .details {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 4px;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Your Visit has been Booked!</h1>

@@ -1,23 +1,49 @@
-@component('mail::message')
-# New Visit Booking Notification
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #2563eb;
+        }
+        .details {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 4px;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>New Visit Booking Notification</h1>
 
-Dear {{ $host->host_name }},
+    <p>Dear {{ $host->host_name }},</p>
 
-A new visit has been booked!
+    <p>A new visit has been booked!</p>
 
-**Visitor Details:**
-- Name: {{ $visitorDetails->first_name }} {{ $visitorDetails->last_name }}
-- Email: {{ $visitorDetails->email }}
-- Phone Number: {{ $visitorDetails->phone_number }}
-- Visit Number: {{ $visitNumber }}
-- Visit Type: {{ $visitorDetails->visit_type }}
-- Visit Facility: {{ $visitorDetails->visit_facility }}
-- Visit Date: {{ $visitorDetails->visit_date }}
-- Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}
-- Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}
+    <div class="details">
+        <p><strong>Visitor Details:</strong></p>
+        <p>Name: {{ $visitorDetails->first_name }} {{ $visitorDetails->last_name }}</p>
+        <p>Email: {{ $visitorDetails->email }}</p>
+        <p>Phone Number: {{ $visitorDetails->phone_number }}</p>
+        <p>Visit Number: {{ $visitNumber }}</p>
+        <p>Visit Type: {{ $visitorDetails->visit_type }}</p>
+        <p>Visit Facility: {{ $visitorDetails->visit_facility }}</p>
+        <p>Visit Date: {{ $visitorDetails->visit_date }}</p>
+        <p>Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}</p>
+        <p>Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}</p>
+    </div>
 
-Thank you for using VisiTrack!
+    <p>Thank you for using VisiTrack!</p>
 
-Best regards,
-The VisiTrack Team
-@endcomponent
+    <p>Best regards,<br>
+    The VisiTrack Team</p>
+</body>
+</html>
