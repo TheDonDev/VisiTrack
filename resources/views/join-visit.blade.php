@@ -44,6 +44,7 @@
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            justify-content: space-between;
         }
 
         .form-content {
@@ -72,7 +73,7 @@
                 <h2 class="text-xl font-bold text-primary mb-4">Join a Visit</h2>
                 <form action="{{ url('/join-visit') }}" method="POST">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4">
                         <input type="text" name="visit_number" placeholder="Visit Number" class="border p-2 rounded w-full" required>
                         <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full" required>
                         <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
@@ -83,7 +84,7 @@
                         <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
                     </div>
                     <!-- Submit and Cancel Buttons -->
-                    <div class="flex justify-center gap-4 mt-4">
+                    <div class="flex justify-center gap-4 mt-4 form-buttons">
                         <a href="/" class="btn-secondary text-white px-4 py-2 rounded">Cancel</a>
                         <button type="submit" class="btn-primary text-white px-4 py-2 rounded">Submit</button>
                     </div>
