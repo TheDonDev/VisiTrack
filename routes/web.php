@@ -1,13 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/send-test-email', function () {
-    Mail::to('donaldmwanga33@gmail.com')->send(new TestMail());
-    return 'Test email sent!';
+    try {
+        Mail::to('donaldmwanga33@gmail.com')->send(new TestMail());
+        return 'Test email sent!';
+    } catch (\Exception $e) {
+        Log::error('Error sending test email: ' . $e->getMessage());
+        return 'Failed to send test email.';
+    }
 });
 
 Route::get('/', function () {

@@ -6,6 +6,7 @@
         @endcomponent
     @endslot
 
+    {{-- Body --}}
     {{ $slot }}
 
     {{-- Footer --}}
