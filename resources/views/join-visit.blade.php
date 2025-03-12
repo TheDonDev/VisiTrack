@@ -29,9 +29,33 @@
         .text-secondary {
             color: var(--secondary-color);
         }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .form-content {
+            flex-grow: 1;
+        }
+
+        .form-buttons {
+            margin-top: auto;
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen flex flex-col">
 
     <!-- Header -->
     <header class="bg-primary text-white py-4">
@@ -42,30 +66,34 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto mt-8">
-        <section class="bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-2xl font-bold text-primary mb-4">Join a Visit</h2>
-            <form action="{{ url('/join-visit') }}" method="POST">
-                @csrf
-                <input type="text" name="visit_number" placeholder="Visit Number" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="designation" placeholder="Designation" class="border p-2 rounded w-full mb-4" required>
-                <input type="email" name="visitor_email" placeholder="Email" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="visitor_number" placeholder="Phone" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="id_number" placeholder="ID Number" class="border p-2 rounded w-full mb-4" required>
-                <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full mb-4" required>
-                <!-- Submit and Cancel Buttons -->
-                <div class="flex justify-end gap-4 mt-6">
-                    <a href="/" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</a>
-                    <button type="submit" class="bg-primary text-white px-4 py-2 rounded">Submit</button>
-                </div>
-            </form>
+    <main class="container mx-auto mt-4 flex-grow flex flex-col">
+        <section class="bg-white shadow-lg rounded-lg p-4 form-container">
+            <div class="form-content">
+                <h2 class="text-xl font-bold text-primary mb-4">Join a Visit</h2>
+                <form action="{{ url('/join-visit') }}" method="POST">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="visit_number" placeholder="Visit Number" class="border p-2 rounded w-full" required>
+                        <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full" required>
+                        <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
+                        <input type="text" name="designation" placeholder="Designation" class="border p-2 rounded w-full" required>
+                        <input type="email" name="visitor_email" placeholder="Email" class="border p-2 rounded w-full" required>
+                        <input type="text" name="visitor_number" placeholder="Phone" class="border p-2 rounded w-full" required>
+                        <input type="text" name="id_number" placeholder="ID Number" class="border p-2 rounded w-full" required>
+                        <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
+                    </div>
+                    <!-- Submit and Cancel Buttons -->
+                    <div class="flex justify-center gap-4 mt-4">
+                        <a href="/" class="btn-secondary text-white px-4 py-2 rounded">Cancel</a>
+                        <button type="submit" class="btn-primary text-white px-4 py-2 rounded">Submit</button>
+                    </div>
+                </form>
+            </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-white py-4 mt-12">
+    <footer class="bg-primary text-white py-4 mt-auto">
         <div class="container mx-auto text-center">
             <p>&copy; 2025 Alupe University. All rights reserved.</p>
         </div>
