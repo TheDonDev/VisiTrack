@@ -42,7 +42,11 @@
         
         <p>Hello {{ $visit->host->host_name }},</p>
         
-        <p>This is to inform you that a visitor has checked in for visit {{ $visit->visit_number }}.</p>
+        @if($isOriginalVisitor)
+            <p>The visitor has checked in for visit {{ $visit->visit_number }}.</p>
+        @else
+            <p>A joining visitor has checked in for visit {{ $visit->visit_number }}.</p>
+        @endif
         
         <div class="details">
             <p><strong>Visitor Details:</strong></p>
@@ -53,6 +57,9 @@
             <p>Organization: {{ $visit->visitor->organization }}</p>
             <p>Visit Date: {{ $visit->visit_date->format('Y-m-d') }}</p>
             <p>Visit Time: {{ $visit->visit_from }} to {{ $visit->visit_to }}</p>
+            @if(!$isOriginalVisitor)
+                <p>Joining Visitor: Yes</p>
+            @endif
         </div>
         
         <p>Thank you for using VisiTrack!</p>

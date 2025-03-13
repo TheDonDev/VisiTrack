@@ -225,8 +225,9 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
 
         // Send notifications
+        $isOriginalVisitor = $visit->visitor_id === $visitor->id;
         Mail::to($visit->visitor->visitor_email)->send(new VisitorCheckedIn($visit));
-        Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit));
+        Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit, $isOriginalVisitor));
 
         // Redirect to visit status page
         return redirect()->route('visits.status', ['visit' => $visit->id])

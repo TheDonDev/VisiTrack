@@ -14,10 +14,6 @@ class HostVisitNotification extends Mailable implements MailableContract
     public $visitor;
     public $visitNumber;
     public $host;
-
-    public $visitor;
-    public $visitNumber;
-    public $host;
     public $visitDetails;
 
     public function __construct($visitor, $visitNumber, $host, $visitDetails = null)
@@ -41,7 +37,8 @@ class HostVisitNotification extends Mailable implements MailableContract
                     ->with([
                         'visitor' => $this->visitor,
                         'visitNumber' => $this->visitNumber,
-                        'host' => $this->host
+                        'host' => $this->host,
+                        'visitDetails' => $this->visitDetails
                     ]);
     }
 }

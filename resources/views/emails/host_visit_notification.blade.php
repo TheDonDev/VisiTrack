@@ -44,11 +44,11 @@
             <p>Email: {{ $visitor->visitor_email }}</p>
             <p>Phone Number: {{ $visitor->visitor_number }}</p>
             <p>Visit Number: {{ $visitNumber }}</p>
-            <p>Visit Type: {{ $visitor->visit_type }}</p>
-            <p>Visit Facility: {{ $visitor->visit_facility }}</p>
-            <p>Visit Date: {{ $visitor->visit_date }}</p>
-            <p>Visit Time: {{ $visitor->visit_from }} - {{ $visitor->visit_to }}</p>
-            <p>Purpose of Visit: {{ $visitor->purpose_of_visit }}</p>
+            <p>Visit Type: {{ $visitDetails['visit_type'] }}</p>
+            <p>Visit Facility: {{ $visitDetails['visit_facility'] }}</p>
+            <p>Visit Date: {{ $visitDetails['visit_date'] }}</p>
+            <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
+            <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
         </div>
     @endif
 
