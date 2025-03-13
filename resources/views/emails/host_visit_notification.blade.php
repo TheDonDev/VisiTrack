@@ -22,24 +22,35 @@
     </style>
 </head>
 <body>
-    <h1>New Visit Booking Notification</h1>
-
-    <p>Dear {{ $host->host_name }},</p>
-
-    <p>A new visit has been booked!</p>
-
-    <div class="details">
-        <p><strong>Visitor Details:</strong></p>
-        <p>Name: {{ $visitorDetails->first_name }} {{ $visitorDetails->last_name }}</p>
-        <p>Email: {{ $visitorDetails->email }}</p>
-        <p>Phone Number: {{ $visitorDetails->phone_number }}</p>
-        <p>Visit Number: {{ $visitNumber }}</p>
-        <p>Visit Type: {{ $visitorDetails->visit_type }}</p>
-        <p>Visit Facility: {{ $visitorDetails->visit_facility }}</p>
-        <p>Visit Date: {{ $visitorDetails->visit_date }}</p>
-        <p>Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}</p>
-        <p>Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}</p>
-    </div>
+    @if(isset($message))
+        <h1>New Visitor Joined Notification</h1>
+        <p>Dear {{ $host->host_name }},</p>
+        <p>A new visitor has joined the visit!</p>
+        <div class="details">
+            <p><strong>Joining Visitor Details:</strong></p>
+            <p>Name: {{ $visitorDetails->visitor_name }} {{ $visitorDetails->visitor_last_name }}</p>
+            <p>Email: {{ $visitorDetails->visitor_email }}</p>
+            <p>Phone: {{ $visitorDetails->visitor_number }}</p>
+            <p>Organization: {{ $visitorDetails->organization }}</p>
+            <p>Visit Number: {{ $visitNumber }}</p>
+        </div>
+    @else
+        <h1>New Visit Booking Notification</h1>
+        <p>Dear {{ $host->host_name }},</p>
+        <p>A new visit has been booked!</p>
+        <div class="details">
+            <p><strong>Visitor Details:</strong></p>
+            <p>Name: {{ $visitorDetails->visitor_name }} {{ $visitorDetails->visitor_last_name }}</p>
+            <p>Email: {{ $visitorDetails->visitor_email }}</p>
+            <p>Phone Number: {{ $visitorDetails->visitor_number }}</p>
+            <p>Visit Number: {{ $visitNumber }}</p>
+            <p>Visit Type: {{ $visitorDetails->visit_type }}</p>
+            <p>Visit Facility: {{ $visitorDetails->visit_facility }}</p>
+            <p>Visit Date: {{ $visitorDetails->visit_date }}</p>
+            <p>Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}</p>
+            <p>Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}</p>
+        </div>
+    @endif
 
     <p>Thank you for using VisiTrack!</p>
 

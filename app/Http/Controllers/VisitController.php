@@ -115,7 +115,7 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
             'host_number' => $host->host_number,
         ]));
 
-        Mail::to($host->host_email)->send(new HostVisitNotification($validatedData, $visitNumber, $host));
+        Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visitNumber, $host));
 
         // Return success response
         return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
