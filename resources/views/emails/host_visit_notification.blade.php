@@ -28,10 +28,10 @@
         <p>A new visitor has joined the visit!</p>
         <div class="details">
             <p><strong>Joining Visitor Details:</strong></p>
-            <p>Name: {{ $visitorDetails->visitor_name }} {{ $visitorDetails->visitor_last_name }}</p>
-            <p>Email: {{ $visitorDetails->visitor_email }}</p>
-            <p>Phone: {{ $visitorDetails->visitor_number }}</p>
-            <p>Organization: {{ $visitorDetails->organization }}</p>
+            <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
+            <p>Email: {{ $visitor->visitor_email }}</p>
+            <p>Phone: {{ $visitor->visitor_number }}</p>
+            <p>Organization: {{ $visitor->organization }}</p>
             <p>Visit Number: {{ $visitNumber }}</p>
         </div>
     @else
@@ -40,15 +40,15 @@
         <p>A new visit has been booked!</p>
         <div class="details">
             <p><strong>Visitor Details:</strong></p>
-            <p>Name: {{ $visitorDetails->visitor_name }} {{ $visitorDetails->visitor_last_name }}</p>
-            <p>Email: {{ $visitorDetails->visitor_email }}</p>
-            <p>Phone Number: {{ $visitorDetails->visitor_number }}</p>
+            <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
+            <p>Email: {{ $visitor->visitor_email }}</p>
+            <p>Phone Number: {{ $visitor->visitor_number }}</p>
             <p>Visit Number: {{ $visitNumber }}</p>
-            <p>Visit Type: {{ $visitorDetails->visit_type }}</p>
-            <p>Visit Facility: {{ $visitorDetails->visit_facility }}</p>
-            <p>Visit Date: {{ $visitorDetails->visit_date }}</p>
-            <p>Visit Time: {{ $visitorDetails->visit_from }} - {{ $visitorDetails->visit_to }}</p>
-            <p>Purpose of Visit: {{ $visitorDetails->purpose_of_visit }}</p>
+            <p>Visit Type: {{ $visitor->visit_type }}</p>
+            <p>Visit Facility: {{ $visitor->visit_facility }}</p>
+            <p>Visit Date: {{ $visitor->visit_date }}</p>
+            <p>Visit Time: {{ $visitor->visit_from }} - {{ $visitor->visit_to }}</p>
+            <p>Purpose of Visit: {{ $visitor->purpose_of_visit }}</p>
         </div>
     @endif
 
