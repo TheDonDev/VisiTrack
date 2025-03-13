@@ -12,7 +12,7 @@ class HostVisitNotification extends Mailable implements MailableContract
     use Queueable, SerializesModels;
 
     public $visitor;
-
+    public $visitNumber;
     public $host;
 
     public function __construct($visitor, $visitNumber, $host)
@@ -21,14 +21,14 @@ class HostVisitNotification extends Mailable implements MailableContract
         $this->visitNumber = $visitNumber;
         $this->host = $host;
     }
-public function build()
-{
-    return $this->view('emails.host_visit_notification')
-                ->with([
-                    'validatedData' => $this->validatedData,
-                    'visitNumber' => $this->visitNumber,
-                    'host' => $this->host,
-                    'visitorDetails' => $this->visitor,
-                ]);
+
+    public function build()
+    {
+        return $this->view('emails.host_visit_notification')
+                    ->with([
+                        'visitor' => $this->visitor,
+                        'visitNumber' => $this->visitNumber,
+                        'host' => $this->host
+                    ]);
     }
 }
