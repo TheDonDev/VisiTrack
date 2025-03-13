@@ -83,17 +83,31 @@
                     <table class="min-w-full bg-white">
                         <thead class="bg-primary text-white">
                             <tr>
+                                <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Name</th>
                                 <th class="px-4 py-2">Email</th>
                                 <th class="px-4 py-2">Phone</th>
+                                <th class="px-4 py-2">Designation</th>
+                                <th class="px-4 py-2">Organization</th>
+                                <th class="px-4 py-2">ID Number</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($visitors as $visitor)
                             <tr class="border-b">
+                                <td class="px-4 py-2 text-gray-700">
+                                    @if($visitor->id === $visit->visitor_id)
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Booked</span>
+                                    @else
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Joined</span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_email }}</td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_number }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->designation }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->organization }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->id_number }}</td>
                             </tr>
                             @endforeach
                         </tbody>
