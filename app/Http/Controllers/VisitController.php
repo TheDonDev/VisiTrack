@@ -124,12 +124,12 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
     public function joinVisit(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'visitor_name' => 'required|string|max:255',
+            'visitor_last_name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'organization' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone_number' => 'required|string|max:15',
+            'visitor_email' => 'required|email',
+            'visitor_number' => 'required|string|max:15',
             'id_number' => 'required|string|max:20',
             'visit_number' => 'required|string',
         ]);
@@ -143,18 +143,25 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
 
         // Save joining visitor details
         $joiningVisitor = Visitor::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'visitor_name' => $request->visitor_name,
+            'visitor_last_name' => $request->visitor_last_name,
             'designation' => $request->designation,
             'organization' => $request->organization,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
+            'visitor_email' => $request->visitor_email,
+            'visitor_number' => $request->visitor_number,
             'id_number' => $request->id_number,
             'visit_number' => $request->visit_number,
         ]);
 
+        // Get the original visitor's email
+        $originalVisitorEmail = $visit->visitor->visitor_email;
+
         // Send email notifications
-        Mail::to($joiningVisitor->email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
+        Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
+        Mail::to($originalVisitorEmail)->send(new VisitorJoined([
+            'message' => 'Someone has joined your visit',
+            'joining_visitor' => $joiningVisitor->toArray()
+        ], $visit->visit_number));
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor->toArray(), $visit->visit_number, $visit->host));
 
         // Return success response

@@ -38,19 +38,26 @@
 </head>
 <body>
     <div class="container">
-        <h1>Visitor Joined Notification</h1>
-        
-        <p>Dear {{ $visit->visitor_name }},</p>
-        
-        <p>You have successfully joined the visit!</p>
-        
-        <div class="details">
-            <p><strong>Visit Details:</strong></p>
-            <p>Visit Number: {{ $visitNumber }}</p>
-            <p>Host Name: {{ $host->name }}</p>
-            <p>Host Email: {{ $host->email }}</p>
-            <p>Host Phone Number: {{ $host->number }}</p>
-        </div>
+        @if(isset($message))
+            <h1>New Visitor Joined Your Visit</h1>
+            <p>Dear Visitor,</p>
+            <p>A new visitor has joined your visit:</p>
+            <div class="details">
+                <p><strong>Joining Visitor Details:</strong></p>
+                <p>Name: {{ $joining_visitor['visitor_name'] }} {{ $joining_visitor['visitor_last_name'] }}</p>
+                <p>Email: {{ $joining_visitor['visitor_email'] }}</p>
+                <p>Phone: {{ $joining_visitor['visitor_number'] }}</p>
+                <p>Organization: {{ $joining_visitor['organization'] }}</p>
+            </div>
+        @else
+            <h1>Visit Joined Successfully</h1>
+            <p>Dear {{ $visitor_name }},</p>
+            <p>You have successfully joined the visit!</p>
+            <div class="details">
+                <p><strong>Visit Details:</strong></p>
+                <p>Visit Number: {{ $visitNumber }}</p>
+            </div>
+        @endif
         
         <p>Thank you for using VisiTrack!</p>
         
