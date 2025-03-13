@@ -47,7 +47,13 @@
                 <p>Name: {{ $joining_visitor['visitor_name'] }} {{ $joining_visitor['visitor_last_name'] }}</p>
                 <p>Email: {{ $joining_visitor['visitor_email'] }}</p>
                 <p>Phone: {{ $joining_visitor['visitor_number'] }}</p>
+                <p>ID Number: {{ $joining_visitor['id_number'] }}</p>
+                <p>Designation: {{ $joining_visitor['designation'] }}</p>
                 <p>Organization: {{ $joining_visitor['organization'] }}</p>
+                <p>Visit Number: {{ $visitNumber }}</p>
+                <p>Visit Date: {{ $visit->visit_date }}</p>
+                <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
+                <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
             </div>
         @else
             <h1>Visit Joined Successfully</h1>

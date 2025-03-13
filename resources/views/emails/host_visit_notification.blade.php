@@ -31,8 +31,13 @@
             <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
             <p>Email: {{ $visitor->visitor_email }}</p>
             <p>Phone: {{ $visitor->visitor_number }}</p>
+            <p>ID Number: {{ $visitor->id_number }}</p>
+            <p>Designation: {{ $visitor->designation }}</p>
             <p>Organization: {{ $visitor->organization }}</p>
             <p>Visit Number: {{ $visitNumber }}</p>
+            <p>Visit Date: {{ $visit->visit_date }}</p>
+            <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
+            <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
         </div>
     @else
         <h1>New Visit Booking Notification</h1>
