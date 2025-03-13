@@ -27,6 +27,8 @@ Route::get('/join-visit', function () {
     return view('join-visit');
 })->name('join.visit');
 
+Route::post('/join-visit', [VisitController::class, 'joinVisit'])->name('join.visit.submit');
+
 Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.visit.submit');
 
 Route::get('/check-in', [VisitController::class, 'showCheckInForm'])->name('visits.check-in');

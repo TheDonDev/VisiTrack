@@ -135,7 +135,7 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         ]);
 
         // Find the visit by visit number
-        $visit = Visitor::where('visit_number', $request->visit_number)->first();
+        $visit = Visit::where('visit_number', $request->visit_number)->first();
 
         if (!$visit) {
             return redirect()->back()->withErrors(['visit_number' => 'Visit number not found.']);
@@ -154,7 +154,7 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         ]);
 
         // Send email notifications
-        Mail::to($visit->email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
+        Mail::to($joiningVisitor->email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor->toArray(), $visit->visit_number, $visit->host));
 
         // Return success response
