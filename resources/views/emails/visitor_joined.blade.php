@@ -40,7 +40,7 @@
     <div class="container">
         <h1>Visitor Joined Notification</h1>
         
-        <p>Dear {{ $visitor->name }},</p>
+        <p>Dear {{ $visit->visitor_name }},</p>
         
         <p>You have successfully joined the visit!</p>
         

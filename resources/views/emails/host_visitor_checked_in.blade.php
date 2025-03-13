@@ -47,6 +47,9 @@
         <div class="details">
             <p><strong>Visitor Details:</strong></p>
             <p>Name: {{ $visit->visitor->visitor_name }} {{ $visit->visitor->visitor_last_name }}</p>
+            <p>Email: {{ $visit->visitor->visitor_email }}</p>
+            <p>Phone Number: {{ $visit->visitor->visitor_number }}</p>
+            <p>Visit Number: {{ $visit->visit_number }}</p>
             <p>Organization: {{ $visit->visitor->organization }}</p>
             <p>Visit Date: {{ $visit->visit_date->format('Y-m-d') }}</p>
             <p>Visit Time: {{ $visit->visit_from }} to {{ $visit->visit_to }}</p>

@@ -34,9 +34,11 @@ class VisitorCheckedIn extends Mailable
         return $this->subject('Visitor Checked In')
                     ->view('emails.visitor_checked_in')
                     ->with([
-                        'visitorName' => $this->visit->visitor_name,
+                        'visitorName' => $this->visit->visitor->visitor_name . ' ' . $this->visit->visitor->visitor_last_name,
                         'visitNumber' => $this->visit->visit_number,
                         'hostName' => $this->visit->host->host_name,
+                        'hostNumber' => $this->visit->host->host_number,
+                        'hostEmail' => $this->visit->host->host_email,
                     ]);
     }
 }

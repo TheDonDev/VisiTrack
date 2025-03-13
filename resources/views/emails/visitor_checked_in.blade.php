@@ -48,6 +48,8 @@
             <p><strong>Visit Details:</strong></p>
             <p>Visit Number: {{ $visitNumber }}</p>
             <p>Host Name: {{ $hostName }}</p>
+            <p>Host Number: {{ $hostNumber }}</p>
+            <p>Host Email: {{ $hostEmail }}</p>
         </div>
 
         <p>Thank you for using VisiTrack!</p>
