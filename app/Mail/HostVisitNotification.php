@@ -15,11 +15,24 @@ class HostVisitNotification extends Mailable implements MailableContract
     public $visitNumber;
     public $host;
 
-    public function __construct($visitor, $visitNumber, $host)
+    public $visitor;
+    public $visitNumber;
+    public $host;
+    public $visitDetails;
+
+    public function __construct($visitor, $visitNumber, $host, $visitDetails = null)
     {
         $this->visitor = $visitor;
         $this->visitNumber = $visitNumber;
         $this->host = $host;
+        $this->visitDetails = $visitDetails ?? [
+            'visit_type' => $visitor->visit_type ?? null,
+            'visit_facility' => $visitor->visit_facility ?? null,
+            'visit_date' => $visitor->visit_date ?? null,
+            'visit_from' => $visitor->visit_from ?? null,
+            'visit_to' => $visitor->visit_to ?? null,
+            'purpose_of_visit' => $visitor->purpose_of_visit ?? null
+        ];
     }
 
     public function build()
