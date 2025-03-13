@@ -27,7 +27,10 @@ class HostVisitNotification extends Mailable implements MailableContract
             'visit_date' => $visitor->visit_date ?? null,
             'visit_from' => $visitor->visit_from ?? null,
             'visit_to' => $visitor->visit_to ?? null,
-            'purpose_of_visit' => $visitor->purpose_of_visit ?? null
+            'purpose_of_visit' => $visitor->purpose_of_visit ?? null,
+            'designation' => $visitor->designation ?? null,
+            'organization' => $visitor->organization ?? null,
+            'id_number' => $visitor->id_number ?? null
         ];
     }
 

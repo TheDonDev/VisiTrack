@@ -54,6 +54,10 @@
             <p>Visit Time: {{ $visit_time }}</p>
             <p>Visit Type: {{ $visit_type }}</p>
             <p>Visit Facility: {{ $visit_facility }}</p>
+            <p>Purpose of Visit: {{ $purpose_of_visit }}</p>
+            <p>Visitor Designation: {{ $designation }}</p>
+            <p>Visitor Organization: {{ $organization }}</p>
+            <p>Visitor ID Number: {{ $id_number }}</p>
         </div>
         
         <p>Thank you for booking your visit!</p>

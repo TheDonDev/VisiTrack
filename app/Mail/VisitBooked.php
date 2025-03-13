@@ -50,6 +50,10 @@ class VisitBooked extends Mailable
                 'host_number' => $this->data['host_number'],
                 'visit_type' => $this->data['visit']->visit_type,
                 'visit_facility' => $this->data['visit']->visit_facility,
+                'purpose_of_visit' => $this->data['visit']->purpose_of_visit,
+                'designation' => $this->data['visit']->visitor->designation,
+                'organization' => $this->data['visit']->visitor->organization,
+                'id_number' => $this->data['visit']->visitor->id_number
             ]
         );
     }

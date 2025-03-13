@@ -48,6 +48,9 @@
             <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
             <p>Email: {{ $visitor->visitor_email }}</p>
             <p>Phone Number: {{ $visitor->visitor_number }}</p>
+            <p>Designation: {{ $visitor->designation }}</p>
+            <p>Organization: {{ $visitor->organization }}</p>
+            <p>ID Number: {{ $visitor->id_number }}</p>
             <p>Visit Number: {{ $visitNumber }}</p>
             <p>Visit Type: {{ $visitDetails['visit_type'] }}</p>
             <p>Visit Facility: {{ $visitDetails['visit_facility'] }}</p>
