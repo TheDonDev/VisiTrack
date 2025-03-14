@@ -44,10 +44,26 @@ class Visitor extends Model
 
     public static function findOrCreate(array $data)
     {
-        return self::firstOrCreate(
-            ['visitor_email' => $data['visitor_email']],
-            $data
-        );
+        // First try to find by visit number
+        if (isset($data['visit_number'])) {
+            $visitor = self::where('visit_number', $data['visit_number'])->first();
+            if ($visitor) {
+                return $visitor;
+            }
+        }
+
+        // Then try to find by email
+        $visitor = self::where('visitor_email', $data['visitor_email'])->first();
+
+        // If found, update visit number if needed
+        if ($visitor && isset($data['visit_number'])) {
+            $visitor->visit_number = $data['visit_number'];
+            $visitor->save();
+            return $visitor;
+        }
+
+        // If not found, create new visitor
+        return self::create($data);
     }
 
     public function visits()
