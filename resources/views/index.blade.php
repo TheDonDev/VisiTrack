@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <!-- Visitor Check-In -->
     <section class="bg-white shadow-lg rounded-lg p-6 mb-12">
+        @if(session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
         <h3 class="text-2xl font-bold text-primary mb-4">Visitor Check-In</h3>
         <form action="{{ route('visits.check-in') }}" method="POST">
             @csrf

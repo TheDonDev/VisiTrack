@@ -45,13 +45,13 @@
             flex-direction: column;
             flex-grow: 1;
             justify-content: space-between;
-            height: calc(100vh - 12rem); /* Adjust height to fit within the viewport */
+            height: calc(100vh - 12rem);
         }
 
         .form-content {
             flex-grow: 1;
             overflow-y: auto;
-            padding-bottom: 2rem; /* Add padding to avoid touching the footer */
+            padding-bottom: 2rem;
         }
 
         .form-buttons {
@@ -74,10 +74,22 @@
         <section class="bg-white shadow-lg rounded-lg p-4 form-container">
             <div class="form-content">
                 <h2 class="text-xl font-bold text-primary mb-4">Join a Visit</h2>
+
+                @if(session('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ session('error') }}</span>
+                    </div>
+                @endif
+
                 <form action="{{ url('/join-visit') }}" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 gap-4">
-                        <input type="text" name="visit_number" placeholder="Visit Number" class="border p-2 rounded w-full" required>
+                        <div class="mb-4">
+                            <input type="text" name="visit_number" placeholder="Visit Number" class="border p-2 rounded w-full @error('visit_number') border-red-500 @enderror" required>
+                            @error('visit_number')
+                                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full" required>
                         <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
                         <input type="text" name="designation" placeholder="Designation" class="border p-2 rounded w-full" required>

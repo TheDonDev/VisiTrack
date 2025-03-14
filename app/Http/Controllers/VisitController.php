@@ -139,7 +139,11 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         $visit = Visit::where('visit_number', $request->visit_number)->first();
 
         if (!$visit) {
-            return redirect()->back()->withErrors(['visit_number' => 'Visit number not found.']);
+            Log::warning('Visit not found', ['visit_number' => $request->visit_number]);
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
         }
 
         // Find or create joining visitor
@@ -217,7 +221,8 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         $visit = Visit::where('visit_number', $request->visit_number)->first();
 
         if (!$visit) {
-            return redirect()->back()->withErrors(['visit_number' => 'Visit number not found.']);
+            Log::warning('Visit not found during check-in', ['visit_number' => $request->visit_number]);
+            return redirect()->route('index')->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
         }
 
         // Update visit status
@@ -254,7 +259,7 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         try {
             // Log before redirect
             Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
-            
+
             // Redirect to visit status page
             return redirect()->route('visits.status', ['visit' => $visit->id])
                 ->with('success', 'Check-in successful!');
@@ -267,20 +272,20 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
     public function showVisitStatus($visit)
     {
         $visit = Visit::with('host')->findOrFail($visit);
-        
+
         // Get all visitors including the original visitor who booked the visit
         $visitors = Visitor::where('visit_number', $visit->visit_number)
             ->orWhere('id', $visit->visitor_id)
             ->get();
-            
+
         $totalVisitors = $visitors->count();
-        
+
         Log::info("Visit data being passed to view:", [
             'visit' => $visit,
             'totalVisitors' => $totalVisitors,
             'visitors' => $visitors,
         ]);
-        
+
         return view('visit-status', compact('visit', 'totalVisitors', 'visitors'));
     }
 }
