@@ -44,24 +44,27 @@
             <p>A new visitor has joined your visit:</p>
             <div class="details">
                 <p><strong>Joining Visitor Details:</strong></p>
-                <p>Name: {{ $joining_visitor['visitor_name'] }} {{ $joining_visitor['visitor_last_name'] }}</p>
-                <p>Email: {{ $joining_visitor['visitor_email'] }}</p>
-                <p>Phone: {{ $joining_visitor['visitor_number'] }}</p>
-                <p>ID Number: {{ $joining_visitor['id_number'] }}</p>
-                <p>Designation: {{ $joining_visitor['designation'] }}</p>
-                <p>Organization: {{ $joining_visitor['organization'] }}</p>
+                <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
+                <p>Email: {{ $visitor->visitor_email }}</p>
+                <p>Phone: {{ $visitor->visitor_number }}</p>
+                <p>ID Number: {{ $visitor->id_number }}</p>
+                <p>Designation: {{ $visitor->designation }}</p>
+                <p>Organization: {{ $visitor->organization }}</p>
                 <p>Visit Number: {{ $visitNumber }}</p>
-                <p>Visit Date: {{ $visit->visit_date }}</p>
-                <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
-                <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
+                <p>Visit Date: {{ $visitDetails['visit_date'] }}</p>
+                <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
+                <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
             </div>
         @else
             <h1>Visit Joined Successfully</h1>
-            <p>Dear {{ $visitor_name }},</p>
+            <p>Dear {{ $visitor->visitor_name }},</p>
             <p>You have successfully joined the visit!</p>
             <div class="details">
                 <p><strong>Visit Details:</strong></p>
                 <p>Visit Number: {{ $visitNumber }}</p>
+                <p>Visit Date: {{ $visitDetails['visit_date'] }}</p>
+                <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
+                <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
             </div>
         @endif
         

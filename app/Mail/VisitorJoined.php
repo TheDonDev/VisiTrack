@@ -16,28 +16,38 @@ class VisitorJoined extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $visitor;
+    public $visitNumber;
+    public $visitDetails;
+
+    public function __construct($visitor, $visitNumber, $visitDetails = null)
     {
-        //
+        $this->visitor = $visitor;
+        $this->visitNumber = $visitNumber;
+        $this->visitDetails = $visitDetails ?? [
+            'visit_date' => $visitor->visit_date ?? null,
+            'visit_from' => $visitor->visit_from ?? null,
+            'visit_to' => $visitor->visit_to ?? null,
+            'purpose_of_visit' => $visitor->purpose_of_visit ?? null
+        ];
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Visitor Joined',
+            subject: 'Visitor Joined Notification',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
             markdown: 'emails.visitor_joined',
+            with: [
+                'visitor' => $this->visitor,
+                'visitNumber' => $this->visitNumber,
+                'visitDetails' => $this->visitDetails
+            ]
         );
     }
 

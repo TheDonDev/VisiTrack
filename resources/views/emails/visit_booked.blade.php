@@ -39,29 +39,29 @@
 <body>
     <div class="container">
         <h1>Your Visit has been Booked!</h1>
-        
-        <p>Dear {{ $visitor_name }},</p>
-        
+
+        <p>Dear {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }},</p>
+
         <p>Your visit details are as follows:</p>
-        
+
         <div class="details">
             <p><strong>Visit Details:</strong></p>
-            <p>Visit Number: {{ $visit_number }}</p>
-            <p>Host Name: {{ $host_name }}</p>
-            <p>Host Email: {{ $host_email }}</p>
-            <p>Host Phone Number: {{ $host_number }}</p>
-            <p>Visit Date: {{ $visit_date }}</p>
-            <p>Visit Time: {{ $visit_time }}</p>
-            <p>Visit Type: {{ $visit_type }}</p>
-            <p>Visit Facility: {{ $visit_facility }}</p>
-            <p>Purpose of Visit: {{ $purpose_of_visit }}</p>
-            <p>Visitor Designation: {{ $designation }}</p>
-            <p>Visitor Organization: {{ $organization }}</p>
-            <p>Visitor ID Number: {{ $id_number }}</p>
+            <p>Visit Number: {{ $visitNumber }}</p>
+            <p>Host Name: {{ $host['host_name'] }}</p>
+            <p>Host Email: {{ $host['host_email'] }}</p>
+            <p>Host Phone Number: {{ $host['host_number'] }}</p>
+            <p>Visit Date: {{ $visit->visit_date }}</p>
+            <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
+            <p>Visit Type: {{ $visit->visit_type }}</p>
+            <p>Visit Facility: {{ $visit->visit_facility }}</p>
+            <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
+            <p>Visitor Designation: {{ $visitor->designation }}</p>
+            <p>Visitor Organization: {{ $visitor->organization }}</p>
+            <p>Visitor ID Number: {{ $visitor->id_number }}</p>
         </div>
-        
+
         <p>Thank you for booking your visit!</p>
-        
+
         <div class="footer">
             <p>Best regards,<br>The VisiTrack Team</p>
         </div>

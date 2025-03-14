@@ -12,36 +12,23 @@ class HostVisitNotification extends Mailable implements MailableContract
     use Queueable, SerializesModels;
 
     public $visitor;
-    public $visitNumber;
+    public $visit;
     public $host;
-    public $visitDetails;
 
-    public function __construct($visitor, $visitNumber, $host, $visitDetails = null)
+    public function __construct($visitor, $visit, $host)
     {
         $this->visitor = $visitor;
-        $this->visitNumber = $visitNumber;
+        $this->visit = $visit;
         $this->host = $host;
-        $this->visitDetails = $visitDetails ?? [
-            'visit_type' => $visitor->visit_type ?? null,
-            'visit_facility' => $visitor->visit_facility ?? null,
-            'visit_date' => $visitor->visit_date ?? null,
-            'visit_from' => $visitor->visit_from ?? null,
-            'visit_to' => $visitor->visit_to ?? null,
-            'purpose_of_visit' => $visitor->purpose_of_visit ?? null,
-            'designation' => $visitor->designation ?? null,
-            'organization' => $visitor->organization ?? null,
-            'id_number' => $visitor->id_number ?? null
-        ];
     }
 
     public function build()
     {
-        return $this->view('emails.host_visit_notification')
+        return $this->view($this->template ?? 'emails.host_visit_booked')
                     ->with([
                         'visitor' => $this->visitor,
-                        'visitNumber' => $this->visitNumber,
-                        'host' => $this->host,
-                        'visitDetails' => $this->visitDetails
+                        'visit' => $this->visit,
+                        'host' => $this->host
                     ]);
     }
 }

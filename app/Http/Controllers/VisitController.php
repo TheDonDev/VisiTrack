@@ -115,7 +115,7 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
             'host_number' => $host->host_number,
         ]));
 
-        Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visitNumber, $host));
+        Mail::to($host->host_email)->send((new HostVisitNotification($visitor, $visit, $host))->view('emails.host_visit_booked'));
 
         // Return success response
         return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
@@ -156,13 +156,18 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         // Get the original visitor's email
         $originalVisitorEmail = $visit->visitor->visitor_email;
 
+        // Prepare visit details
+        $visitDetails = [
+            'visit_date' => $visit->visit_date,
+            'visit_from' => $visit->visit_from,
+            'visit_to' => $visit->visit_to,
+            'purpose_of_visit' => $visit->purpose_of_visit
+        ];
+
         // Send email notifications
-        Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor->toArray(), $visit->visit_number));
-        Mail::to($originalVisitorEmail)->send(new VisitorJoined([
-            'message' => 'Someone has joined your visit',
-            'joining_visitor' => $joiningVisitor->toArray()
-        ], $visit->visit_number));
-        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor->toArray(), $visit->visit_number, $visit->host));
+        Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit->visit_number, $visitDetails));
+        Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit->visit_number, $visitDetails));
+        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit->visit_number, $visit->host, $visitDetails));
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
@@ -224,26 +229,55 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
         // Retrieve the associated visitor
         $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
 
-        // Send notifications
-        $isOriginalVisitor = $visit->visitor_id === $visitor->id;
-        Mail::to($visit->visitor->visitor_email)->send(new VisitorCheckedIn($visit));
-        Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit, $isOriginalVisitor));
+        if (!$visitor) {
+            Log::error("Visitor not found for visit number: " . $visit->visit_number);
+            return redirect()->back()->withErrors(['visit_number' => 'Visitor not found for this visit number.']);
+        }
 
-        // Redirect to visit status page
-        return redirect()->route('visits.status', ['visit' => $visit->id])
-            ->with('success', 'Check-in successful!');
+        // Verify visitor relationship
+        if (!$visit->visitor) {
+            Log::error("Visit has no associated visitor. Visit ID: " . $visit->id);
+            return redirect()->back()->withErrors(['visit' => 'Visit has no associated visitor.']);
+        }
+
+        // Verify host relationship
+        if (!$visit->host) {
+            Log::error("Visit has no associated host. Visit ID: " . $visit->id);
+            return redirect()->back()->withErrors(['visit' => 'Visit has no associated host.']);
+        }
+
+        try {
+            // Send notifications
+            $isOriginalVisitor = $visit->visitor_id === $visitor->id;
+            Mail::to($visit->visitor->visitor_email)->send(new VisitorCheckedIn($visit));
+            Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit, $isOriginalVisitor));
+
+            // Redirect to visit status page
+            return redirect()->route('visits.status', ['visit' => $visit->id])
+                ->with('success', 'Check-in successful!');
+        } catch (\Exception $e) {
+            Log::error("Error during check-in process: " . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'An error occurred during check-in. Please try again.']);
+        }
     }
 
     public function showVisitStatus($visit)
     {
-$visit = Visit::with('host')->findOrFail($visit);
-        $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
+        $visit = Visit::with('host')->findOrFail($visit);
+        
+        // Get all visitors including the original visitor who booked the visit
+        $visitors = Visitor::where('visit_number', $visit->visit_number)
+            ->orWhere('id', $visit->visitor_id)
+            ->get();
+            
         $totalVisitors = $visitors->count();
+        
         Log::info("Visit data being passed to view:", [
             'visit' => $visit,
             'totalVisitors' => $totalVisitors,
             'visitors' => $visitors,
         ]);
+        
         return view('visit-status', compact('visit', 'totalVisitors', 'visitors'));
     }
 }

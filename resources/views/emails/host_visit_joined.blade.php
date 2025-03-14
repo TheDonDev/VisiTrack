@@ -22,7 +22,6 @@
     </style>
 </head>
 <body>
-    @if(isset($message))
         <h1>New Visitor Joined Notification</h1>
         <p>Dear {{ $host->host_name }},</p>
         <p>A new visitor has joined the visit!</p>
@@ -34,32 +33,11 @@
             <p>ID Number: {{ $visitor->id_number }}</p>
             <p>Designation: {{ $visitor->designation }}</p>
             <p>Organization: {{ $visitor->organization }}</p>
-            <p>Visit Number: {{ $visitNumber }}</p>
+            <p>Visit Number: {{ $visit->visit_number }}</p>
             <p>Visit Date: {{ $visit->visit_date }}</p>
             <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
             <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
         </div>
-    @else
-        <h1>New Visit Booking Notification</h1>
-        <p>Dear {{ $host->host_name }},</p>
-        <p>A new visit has been booked!</p>
-        <div class="details">
-            <p><strong>Visitor Details:</strong></p>
-            <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
-            <p>Email: {{ $visitor->visitor_email }}</p>
-            <p>Phone Number: {{ $visitor->visitor_number }}</p>
-            <p>Designation: {{ $visitor->designation }}</p>
-            <p>Organization: {{ $visitor->organization }}</p>
-            <p>ID Number: {{ $visitor->id_number }}</p>
-            <p>Visit Number: {{ $visitNumber }}</p>
-            <p>Visit Type: {{ $visitDetails['visit_type'] }}</p>
-            <p>Visit Facility: {{ $visitDetails['visit_facility'] }}</p>
-            <p>Visit Date: {{ $visitDetails['visit_date'] }}</p>
-            <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
-            <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
-        </div>
-    @endif
-
     <p>Thank you for using VisiTrack!</p>
 
     <p>Best regards,<br>
