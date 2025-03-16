@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('comments');
             $table->integer('rating')->check('rating BETWEEN 1 AND 5');
             $table->timestamps();
-            
+
             $table->foreign('visit_number')->references('visit_number')->on('visits');
         });
     }
