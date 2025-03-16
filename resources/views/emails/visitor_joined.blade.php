@@ -38,7 +38,6 @@
 </head>
 <body>
     <div class="container">
-        @if(isset($message))
             <h1>New Visitor Joined Your Visit</h1>
             <p>Dear Visitor,</p>
             <p>A new visitor has joined your visit:</p>
@@ -55,21 +54,9 @@
                 <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
                 <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
             </div>
-        @else
-            <h1>Visit Joined Successfully</h1>
-            <p>Dear {{ $visitor->visitor_name }},</p>
-            <p>You have successfully joined the visit!</p>
-            <div class="details">
-                <p><strong>Visit Details:</strong></p>
-                <p>Visit Number: {{ $visitNumber }}</p>
-                <p>Visit Date: {{ $visitDetails['visit_date'] }}</p>
-                <p>Visit Time: {{ $visitDetails['visit_from'] }} - {{ $visitDetails['visit_to'] }}</p>
-                <p>Purpose of Visit: {{ $visitDetails['purpose_of_visit'] }}</p>
-            </div>
-        @endif
-        
+
         <p>Thank you for using VisiTrack!</p>
-        
+
         <div class="footer">
             <p>Best regards,<br>The VisiTrack Team</p>
         </div>

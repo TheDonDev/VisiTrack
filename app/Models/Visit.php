@@ -59,4 +59,9 @@ class Visit extends Model
     {
         return $this->hasOne(Feedback::class);
     }
+
+    public function visitors()
+    {
+        return $this->hasMany(Visitor::class, 'visit_number', 'visit_number');
+    }
 }

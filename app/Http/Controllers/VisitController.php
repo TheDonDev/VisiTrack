@@ -47,9 +47,24 @@ class VisitController extends Controller
         // Generate a unique visit number
         $visitNumber = Visit::generateVisitNumber();
 
-        // Find or create visitor and associate with visit number
-        $visitorData = array_merge($validatedData, ['visit_number' => $visitNumber]);
-        $visitor = Visitor::findOrCreate($visitorData);
+        // Create new visitor for this visit
+        $visitor = new Visitor();
+        $visitor->fill([
+            'visitor_name' => $validatedData['visitor_name'],
+            'visitor_last_name' => $validatedData['visitor_last_name'],
+            'designation' => $validatedData['designation'],
+            'organization' => $validatedData['organization'],
+            'visitor_email' => $validatedData['visitor_email'],
+            'visitor_number' => $validatedData['visitor_number'],
+            'id_number' => $validatedData['id_number'],
+            'visit_number' => $visitNumber,
+        ]);
+
+        // Save the visitor
+        if (!$visitor->save()) {
+            Log::error('Failed to save visitor', ['visit_number' => $visitNumber]);
+            return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
+        }
 
         // Create the visit record with eager loading
         $visit = Visit::create([
@@ -102,13 +117,7 @@ class VisitController extends Controller
             'visit_number' => $visitNumber,
         ]);
 
-Log::info("Data being sent to VisitBooked email:", [
-    'visitor_name' => $visitor->visitor_name,
-    'visitor_email' => $validatedData['visitor_email'],
-    'visit_number' => $visitNumber,
-]);
-
-Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
+        Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
             'visit' => $visit,
             'visitNumber' => $visitNumber,
             'host_name' => $host->host_name,
@@ -146,17 +155,37 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
                 ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
         }
 
-        // Find or create joining visitor
-        $joiningVisitor = Visitor::findOrCreate([
-            'visitor_name' => $request->visitor_name,
-            'visitor_last_name' => $request->visitor_last_name,
-            'designation' => $request->designation,
-            'organization' => $request->organization,
-            'visitor_email' => $request->visitor_email,
-            'visitor_number' => $request->visitor_number,
-            'id_number' => $request->id_number,
-            'visit_number' => $request->visit_number,
-        ]);
+        // Check if visitor already exists
+        $joiningVisitor = Visitor::where('visitor_email', $request->visitor_email)->first();
+
+        if ($joiningVisitor) {
+            // Update existing visitor's visit number
+            $joiningVisitor->visit_number = $visit->visit_number;
+        } else {
+            // Create new visitor
+            $joiningVisitor = new Visitor([
+                'visitor_name' => $request->visitor_name,
+                'visitor_last_name' => $request->visitor_last_name,
+                'designation' => $request->designation,
+                'organization' => $request->organization,
+                'visitor_email' => $request->visitor_email,
+                'visitor_number' => $request->visitor_number,
+                'id_number' => $request->id_number,
+                'visit_number' => $visit->visit_number,
+            ]);
+        }
+
+        // Save the visitor
+        if (!$joiningVisitor->save()) {
+            Log::error('Failed to save joining visitor', ['visit_number' => $visit->visit_number]);
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Failed to save visitor information. Please try again.');
+        }
+
+        // Associate visitor with visit
+        $visit->visitors()->save($joiningVisitor);
 
         // Get the original visitor's email
         $originalVisitorEmail = $visit->visitor->visitor_email;
@@ -213,59 +242,79 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
 
     public function processCheckIn(Request $request)
     {
-        $request->validate([
-            'visit_number' => 'required|string|exists:visits,visit_number'
-        ]);
+        try {
+            // Validate with custom error message
+            $request->validate([
+                'visit_number' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        Log::info("Validating visit number: " . $value);
+                        if (!Visit::where('visit_number', $value)->exists()) {
+                            Log::warning("Visit number not found: " . $value);
+                            return redirect()->route('index')
+                                ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
+                        }
+                    }
+                ]
+            ]);
 
-        // Find the visit
-        $visit = Visit::where('visit_number', $request->visit_number)->first();
+            Log::info("Visit number validated successfully: " . $request->visit_number);
 
-        if (!$visit) {
-            Log::warning('Visit not found during check-in', ['visit_number' => $request->visit_number]);
-            return redirect()->route('index')->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
-        }
+            // Find the visit
+            $visit = Visit::where('visit_number', $request->visit_number)->firstOrFail();
+            Log::info("Visit found: " . $visit->id);
 
-        // Update visit status
-        $visit->update(['status' => 'checked_in']);
+            // Update visit status
+            $visit->update(['status' => 'checked_in']);
 
-        // Get related visitors
-        $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
-        $totalVisitors = $visitors->count();
+            // Get related visitors
+            $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
+            $totalVisitors = $visitors->count();
 
-        // Retrieve the associated visitor - first try by visitor_id, then by visit_number
-        $visitor = Visitor::find($visit->visitor_id);
-
-        if (!$visitor) {
-            $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
+            // Retrieve the associated visitor - first try by visitor_id, then by visit_number
+            $visitor = Visitor::find($visit->visitor_id);
 
             if (!$visitor) {
-                Log::error("Visitor not found for visit ID: " . $visit->visitor_id . " or visit number: " . $visit->visit_number);
-                return redirect()->back()->withErrors(['visit_number' => 'Visitor not found for this visit.']);
+                $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
+
+                if (!$visitor) {
+                    Log::error("Visitor not found for visit ID: " . $visit->visitor_id . " or visit number: " . $visit->visit_number);
+                    return redirect()->back()->withErrors(['visit_number' => 'Visitor not found for this visit.']);
+                }
             }
-        }
 
-        // Verify visitor relationship
-        if (!$visit->visitor) {
-            Log::error("Visit has no associated visitor. Visit ID: " . $visit->id);
-            return redirect()->back()->withErrors(['visit' => 'Visit has no associated visitor.']);
-        }
+            // Verify visitor relationship
+            if (!$visit->visitor) {
+                Log::error("Visit has no associated visitor. Visit ID: " . $visit->id);
+                return redirect()->back()->withErrors(['visit' => 'Visit has no associated visitor.']);
+            }
 
-        // Verify host relationship
-        if (!$visit->host) {
-            Log::error("Visit has no associated host. Visit ID: " . $visit->id);
-            return redirect()->back()->withErrors(['visit' => 'Visit has no associated host.']);
-        }
+            // Verify host relationship
+            if (!$visit->host) {
+                Log::error("Visit has no associated host. Visit ID: " . $visit->id);
+                return redirect()->back()->withErrors(['visit' => 'Visit has no associated host.']);
+            }
 
-        try {
-            // Log before redirect
-            Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
+            try {
+                // Log before redirect
+                Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
 
-            // Redirect to visit status page
-            return redirect()->route('visits.status', ['visit' => $visit->id])
-                ->with('success', 'Check-in successful!');
+                // Redirect to visit status page
+                return redirect()->route('visits.status', ['visit' => $visit->id])
+                    ->with('success', 'Check-in successful!');
+            } catch (\Exception $e) {
+                Log::error("Error during check-in process: " . $e->getMessage());
+                return redirect()->back()->withErrors(['error' => 'An error occurred during check-in. Please try again.']);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->route('index')
+                ->withErrors($e->errors())
+                ->withInput();
         } catch (\Exception $e) {
             Log::error("Error during check-in process: " . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occurred during check-in. Please try again.']);
+            return redirect()->route('index')
+                ->with('error', 'An error occurred during check-in. Please try again.');
         }
     }
 
@@ -273,12 +322,18 @@ Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
     {
         $visit = Visit::with('host')->findOrFail($visit);
 
-        // Get all visitors including the original visitor who booked the visit
-        $visitors = Visitor::where('visit_number', $visit->visit_number)
-            ->orWhere('id', $visit->visitor_id)
-            ->get();
-
+        // Get all visitors associated with this visit
+        $visitors = $visit->visitors()->get();
         $totalVisitors = $visitors->count();
+
+        // Ensure the original visitor is included
+        if (!$visitors->contains('id', $visit->visitor_id)) {
+            $originalVisitor = Visitor::find($visit->visitor_id);
+            if ($originalVisitor) {
+                $visitors->push($originalVisitor);
+                $totalVisitors++;
+            }
+        }
 
         Log::info("Visit data being passed to view:", [
             'visit' => $visit,
