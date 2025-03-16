@@ -38,22 +38,26 @@
 </head>
 <body>
     <div class="container">
-            <h1>New Visitor Joined Your Visit</h1>
-            <p>Dear {{ $originalVisitor->visitor_name }} {{ $originalVisitor->visitor_last_name }},</p>
-            <p>A new visitor has joined your visit:</p>
-            <div class="details">
-                <p><strong>Joining Visitor Details:</strong></p>
-                <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
-                <p>Email: {{ $visitor->visitor_email }}</p>
-                <p>Phone: {{ $visitor->visitor_number }}</p>
-                <p>ID Number: {{ $visitor->id_number }}</p>
-                <p>Designation: {{ $visitor->designation }}</p>
-                <p>Organization: {{ $visitor->organization }}</p>
-                <p>Visit Number: {{ $visit->visit_number }}</p>
-                <p>Visit Date: {{ $visit->visit_date }}</p>
-                <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
-                <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
-            </div>
+        <h1>Visit Joining Confirmation</h1>
+        <p>Dear {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }},</p>
+        <p>You have successfully joined the following visit:</p>
+
+        <div class="details">
+            <p><strong>Visit Details:</strong></p>
+            <p>Visit Number: {{ $visit->visit_number }}</p>
+            <p>Visit Date: {{ $visit->visit_date }}</p>
+            <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
+            <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
+            <p>Visit Facility: {{ $visit->visit_facility }}</p>
+            <p>Visit Type: {{ $visit->visit_type }}</p>
+        </div>
+
+        <div class="details">
+            <p><strong>Host Details:</strong></p>
+            <p>Host Name: {{ $visit->host->host_name }}</p>
+            <p>Host Email: {{ $visit->host->host_email }}</p>
+            <p>Host Phone: {{ $visit->host->host_number }}</p>
+        </div>
 
         <p>Thank you for using VisiTrack!</p>
 
