@@ -205,8 +205,37 @@ class VisitController extends Controller
             'visit_number' => $visit->visit_number
         ]);
 
-        // Send host notification
-        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
+        // Send host notification with explicit template
+        $email = (new HostVisitNotification($joiningVisitor, $visit, $visit->host))
+            ->view('emails.host_visit_joined');
+
+        // Verify template exists
+        if (!view()->exists('emails.host_visit_joined')) {
+            Log::error('Template emails.host_visit_joined does not exist');
+            return redirect()->back()->withErrors(['error' => 'Email template not found']);
+        }
+
+        // Log detailed email information
+        Log::info('Sending host visit joined email', [
+            'template' => 'emails.host_visit_joined',
+            'host_email' => $visit->host->host_email,
+            'visit_number' => $visit->visit_number,
+            'visitor_name' => $joiningVisitor->visitor_name,
+            'original_visitor_name' => $visit->visitor->visitor_name
+        ]);
+
+        // Render the email content for debugging
+        $renderedContent = view('emails.host_visit_joined', [
+            'visitor' => $joiningVisitor,
+            'visit' => $visit,
+            'host' => $visit->host,
+            'originalVisitor' => $visit->visitor
+        ])->render();
+
+        Log::debug('Rendered email content', ['content' => $renderedContent]);
+
+        // Send the email
+        Mail::to($visit->host->host_email)->send($email);
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
