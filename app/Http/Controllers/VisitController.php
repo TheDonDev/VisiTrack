@@ -155,25 +155,17 @@ class VisitController extends Controller
                 ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
         }
 
-        // Check if visitor already exists
-        $joiningVisitor = Visitor::where('visitor_email', $request->visitor_email)->first();
-
-        if ($joiningVisitor) {
-            // Update existing visitor's visit number
-            $joiningVisitor->visit_number = $visit->visit_number;
-        } else {
-            // Create new visitor
-            $joiningVisitor = new Visitor([
-                'visitor_name' => $request->visitor_name,
-                'visitor_last_name' => $request->visitor_last_name,
-                'designation' => $request->designation,
-                'organization' => $request->organization,
-                'visitor_email' => $request->visitor_email,
-                'visitor_number' => $request->visitor_number,
-                'id_number' => $request->id_number,
-                'visit_number' => $visit->visit_number,
-            ]);
-        }
+        // Create new visitor for this specific visit
+        $joiningVisitor = new Visitor([
+            'visitor_name' => $request->visitor_name,
+            'visitor_last_name' => $request->visitor_last_name,
+            'designation' => $request->designation,
+            'organization' => $request->organization,
+            'visitor_email' => $request->visitor_email,
+            'visitor_number' => $request->visitor_number,
+            'id_number' => $request->id_number,
+            'visit_number' => $visit->visit_number,
+        ]);
 
         // Save the visitor
         if (!$joiningVisitor->save()) {
