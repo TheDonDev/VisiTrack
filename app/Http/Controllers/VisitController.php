@@ -179,6 +179,9 @@ class VisitController extends Controller
         // Associate visitor with visit
         $visit->visitors()->save($joiningVisitor);
 
+        // Update visit status to 'joined'
+        $visit->update(['status' => 'joined']);
+
         // Get the original visitor's email
         $originalVisitorEmail = $visit->visitor->visitor_email;
 
@@ -193,16 +196,17 @@ class VisitController extends Controller
         // Send email notifications
         Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit, true));
         Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
-        $email = (new HostVisitNotification($joiningVisitor, $visit, $visit->host))
-            ->view('emails.host_visit_joined');
 
-        Log::info('Sending host visit joined email', [
-            'template' => 'emails.host_visit_joined',
+        // Log before sending host notification
+        Log::info('Sending host notification', [
+            'visit_status' => $visit->status,
+            'template' => $visit->status === 'joined' ? 'emails.host_visit_joined' : 'emails.host_visit_booked',
             'host_email' => $visit->host->host_email,
             'visit_number' => $visit->visit_number
         ]);
 
-        Mail::to($visit->host->host_email)->send($email);
+        // Send host notification
+        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
