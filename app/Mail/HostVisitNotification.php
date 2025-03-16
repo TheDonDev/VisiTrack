@@ -24,11 +24,16 @@ class HostVisitNotification extends Mailable implements MailableContract
 
     public function build()
     {
-        return $this->view($this->template ?? 'emails.host_visit_booked')
+        // Determine which template to use based on the visit status
+        $template = $this->template ??
+            ($this->visit->status === 'joined' ? 'emails.host_visit_joined' : 'emails.host_visit_booked');
+
+        return $this->view($template)
                     ->with([
                         'visitor' => $this->visitor,
                         'visit' => $this->visit,
-                        'host' => $this->host
+                        'host' => $this->host,
+                        'originalVisitor' => $this->visit->visitor
                     ]);
     }
 }

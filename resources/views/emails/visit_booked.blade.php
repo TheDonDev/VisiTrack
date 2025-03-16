@@ -45,19 +45,28 @@
         <p>Your visit details are as follows:</p>
 
         <div class="details">
+            <p><strong>Visitor Details:</strong></p>
+            <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
+            <p>Designation: {{ $visitor->designation }}</p>
+            <p>Organization: {{ $visitor->organization }}</p>
+            <p>ID Number: {{ $visitor->id_number }}</p>
+        </div>
+
+        <div class="details">
             <p><strong>Visit Details:</strong></p>
             <p>Visit Number: {{ $visitNumber }}</p>
-            <p>Host Name: {{ $host['host_name'] }}</p>
-            <p>Host Email: {{ $host['host_email'] }}</p>
-            <p>Host Phone Number: {{ $host['host_number'] }}</p>
             <p>Visit Date: {{ $visit->visit_date }}</p>
             <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>
             <p>Visit Type: {{ $visit->visit_type }}</p>
             <p>Visit Facility: {{ $visit->visit_facility }}</p>
             <p>Purpose of Visit: {{ $visit->purpose_of_visit }}</p>
-            <p>Visitor Designation: {{ $visitor->designation }}</p>
-            <p>Visitor Organization: {{ $visitor->organization }}</p>
-            <p>Visitor ID Number: {{ $visitor->id_number }}</p>
+        </div>
+
+        <div class="details">
+            <p><strong>Host Details:</strong></p>
+            <p>Host Name: {{ $host['host_name'] }}</p>
+            <p>Host Email: {{ $host['host_email'] }}</p>
+            <p>Host Phone Number: {{ $host['host_number'] }}</p>
         </div>
 
         <p>Thank you for booking your visit!</p>

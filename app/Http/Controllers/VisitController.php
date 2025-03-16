@@ -193,8 +193,16 @@ class VisitController extends Controller
         // Send email notifications
         Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit, true));
         Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
-        Mail::to($visit->host->host_email)->send((new HostVisitNotification($joiningVisitor, $visit, $visit->host))
-            ->view('emails.host_visit_joined'));
+        $email = (new HostVisitNotification($joiningVisitor, $visit, $visit->host))
+            ->view('emails.host_visit_joined');
+
+        Log::info('Sending host visit joined email', [
+            'template' => 'emails.host_visit_joined',
+            'host_email' => $visit->host->host_email,
+            'visit_number' => $visit->visit_number
+        ]);
+
+        Mail::to($visit->host->host_email)->send($email);
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");

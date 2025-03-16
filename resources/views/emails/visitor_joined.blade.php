@@ -42,13 +42,17 @@
             <p>Dear {{ $originalVisitor->visitor_name }} {{ $originalVisitor->visitor_last_name }},</p>
             <p>A new visitor has joined your visit:</p>
             <div class="details">
-                <p><strong>Joining Visitor Details:</strong></p>
+                <p><strong>Visitor Details:</strong></p>
                 <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
                 <p>Email: {{ $visitor->visitor_email }}</p>
                 <p>Phone: {{ $visitor->visitor_number }}</p>
                 <p>ID Number: {{ $visitor->id_number }}</p>
                 <p>Designation: {{ $visitor->designation }}</p>
                 <p>Organization: {{ $visitor->organization }}</p>
+            </div>
+
+            <div class="details">
+                <p><strong>Visit Details:</strong></p>
                 <p>Visit Number: {{ $visit->visit_number }}</p>
                 <p>Visit Date: {{ $visit->visit_date }}</p>
                 <p>Visit Time: {{ $visit->visit_from }} - {{ $visit->visit_to }}</p>

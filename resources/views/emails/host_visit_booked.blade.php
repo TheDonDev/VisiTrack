@@ -33,6 +33,10 @@ margin: 5px 0;
 <p>Designation: {{ $visitor->designation }}</p>
 <p>Organization: {{ $visitor->organization }}</p>
 <p>ID Number: {{ $visitor->id_number }}</p>
+</div>
+
+<div class="details">
+<p><strong>Visit Details:</strong></p>
 <p>Visit Number: {{ $visit->visit_number }}</p>
 <p>Visit Type: {{ $visit->visit_type }}</p>
 <p>Visit Facility: {{ $visit->visit_facility }}</p>
