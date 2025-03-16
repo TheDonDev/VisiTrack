@@ -197,15 +197,7 @@ class VisitController extends Controller
         Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit, true));
         Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
 
-        // Log before sending host notification
-        Log::info('Sending host notification', [
-            'visit_status' => $visit->status,
-            'template' => $visit->status === 'joined' ? 'emails.host_visit_joined' : 'emails.host_visit_booked',
-            'host_email' => $visit->host->host_email,
-            'visit_number' => $visit->visit_number
-        ]);
-
-        // Send host notification with explicit template
+        // Only send the joined visit notification
         $email = (new HostVisitNotification($joiningVisitor, $visit, $visit->host))
             ->view('emails.host_visit_joined');
 
