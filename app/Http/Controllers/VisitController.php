@@ -125,7 +125,7 @@ class VisitController extends Controller
             'host_number' => $host->host_number,
         ]));
 
-Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $host));
+        Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $host));
 
         // Return success response
         return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
@@ -185,47 +185,12 @@ Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $h
         // Get the original visitor's email
         $originalVisitorEmail = $visit->visitor->visitor_email;
 
-        // Prepare visit details
-        $visitDetails = [
-            'visit_date' => $visit->visit_date,
-            'visit_from' => $visit->visit_from,
-            'visit_to' => $visit->visit_to,
-            'purpose_of_visit' => $visit->purpose_of_visit
-        ];
-
         // Send email notifications
         Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit, true));
         Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
 
-        // Only send the joined visit notification
-
-        // Verify template exists
-        if (!view()->exists('emails.host_visit_joined')) {
-            Log::error('Template emails.host_visit_joined does not exist');
-            return redirect()->back()->withErrors(['error' => 'Email template not found']);
-        }
-
-        // Log detailed email information
-        Log::info('Sending host visit joined email', [
-            'template' => 'emails.host_visit_joined',
-            'host_email' => $visit->host->host_email,
-            'visit_number' => $visit->visit_number,
-            'visitor_name' => $joiningVisitor->visitor_name,
-            'original_visitor_name' => $visit->visitor->visitor_name
-        ]);
-
-        // Render the email content for debugging
-        $renderedContent = view('emails.host_visit_joined', [
-            'visitor' => $joiningVisitor,
-            'visit' => $visit,
-            'host' => $visit->host,
-            'originalVisitor' => $visit->visitor
-        ])->render();
-
-        Log::debug('Rendered email content', ['content' => $renderedContent]);
-
-        // Send the email
-        Mail::to($visit->host->host_email)->send($email);
+        // Send the joined visit notification to the host
+        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
