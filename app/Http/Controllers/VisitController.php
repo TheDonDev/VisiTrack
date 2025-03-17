@@ -198,8 +198,7 @@ Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $h
         Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
 
         // Only send the joined visit notification
-        $email = (new HostVisitNotification($joiningVisitor, $visit, $visit->host))
-            ->view('emails.host_visit_joined');
+$email = (new VisitorJoined($joiningVisitor, $visit, $visit->host))->view('emails.host_visit_joined');
 
         // Verify template exists
         if (!view()->exists('emails.host_visit_joined')) {
