@@ -125,7 +125,7 @@ class VisitController extends Controller
             'host_number' => $host->host_number,
         ]));
 
-        Mail::to($host->host_email)->send((new HostVisitNotification($visitor, $visit, $host))->view('emails.host_visit_booked'));
+Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $host));
 
         // Return success response
         return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
