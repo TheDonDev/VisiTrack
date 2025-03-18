@@ -238,6 +238,7 @@ class VisitController extends Controller
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!")->with('visit_number', $visit->visit_number);
+        
     }
 
     public function submitFeedback(Request $request)
