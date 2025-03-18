@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\View;
 use App\Http\Controllers\VisitController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Auth\AuthController;
 
+// Test email route
 Route::get('/send-test-email', function () {
     try {
         Mail::to('donaldmwanga33@gmail.com')->send(new TestMail());
@@ -17,6 +19,7 @@ Route::get('/send-test-email', function () {
     }
 });
 
+// Main routes
 Route::get('/', function () {
     return view('index');
 })->name('index');
@@ -34,8 +37,18 @@ Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.vi
 Route::get('/check-in', [VisitController::class, 'showCheckInForm'])->name('visits.check-in');
 Route::post('/check-in', [VisitController::class, 'processCheckIn'])->name('visits.check-in.submit');
 
-Route::get('/visit-status/{visit}', [VisitController::class, 'showVisitStatus'])->name('visits.status');
+Route::get('/visit-status/{visit}', [VisitController::class, 'showVisitStatus'])->name('visit.status');
 
 Route::post('/submit-feedback', [VisitController::class, 'submitFeedback'])->name('visits.feedback.submit');
 
-Route::post('/notify-host', [VisitController::class, 'notifyHost'])->name('visits.notify-host');
+// Security routes
+Route::get('/login', function () {
+    return view('security.login');
+})->name('security.login');
+
+Route::get('/signup', function () {
+    return view('security.signup');
+})->name('security.signup');
+
+Route::post('/login', [AuthController::class, 'login'])->name('security.login.submit');
+Route::post('/signup', [AuthController::class, 'signup'])->name('security.signup.submit');

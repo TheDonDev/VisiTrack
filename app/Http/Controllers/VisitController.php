@@ -237,7 +237,7 @@ class VisitController extends Controller
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
 
         // Return success response
-        return redirect()->route('index')->with('success', "You have joined the visit successfully!");
+        return redirect()->route('index')->with('success', "You have joined the visit successfully!")->with('visit_number', $visit->visit_number);
     }
 
     public function submitFeedback(Request $request)

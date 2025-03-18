@@ -31,6 +31,25 @@ document.addEventListener('DOMContentLoaded', function () {
         <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
     </div>
 </div>
+
+<!-- Login/Signup Modal -->
+<div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <h2 class="text-xl font-bold text-primary">Login / Signup</h2>
+        <form id="auth-form" action="{{ route('security.login') }}" method="POST">
+            @csrf
+            <div class="mb-4">
+                <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+            </div>
+            <div class="mb-4">
+                <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
+            </div>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Login</button>
+            <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
+        </form>
+    </div>
+</div>
+
 <style>
 :root {
     --primary-color: #004080; /* Alupe's blue */
@@ -86,16 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         @endif
         <h3 class="text-2xl font-bold text-primary mb-4">Visitor Check-In</h3>
-        <form action="{{ route('visits.check-in') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <input type="text" name="visit_number" id="visit_number"
-                    class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
-            </div>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-                Check In
-            </button>
-        </form>
+        <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+            Login / Signup
+        </button>
+        <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+            Visit Status
+        </a>
     </section>
 
     <!-- Feedback -->
