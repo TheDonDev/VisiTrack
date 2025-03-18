@@ -6,6 +6,7 @@ use App\Models\Visitor;
 use App\Models\Host;
 use App\Models\Feedback;
 use App\Models\Visit;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +19,49 @@ use App\Mail\HostVisitorCheckedIn;
 
 class VisitController extends Controller
 {
+    public function showLoginForm()
+    {
+        return view('security.login');
+    }
+
+    public function showSignupForm()
+    {
+        return view('security.signup');
+    }
+
+    public function signup(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
+
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        // Send confirmation email
+        $visit = Visit::where('visitor_id', $user->id)->first();
+        Mail::to($user->email)->send(new VisitorJoined($user, $visit));
+
+        return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (\Illuminate\Support\Facades\Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->route('visits.check-in')->with('success', 'Login successful!');
+        }
+
+        return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
+    }
+
     public function showBookVisitForm()
     {
         $hosts = Host::all();
