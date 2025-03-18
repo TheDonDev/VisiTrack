@@ -218,7 +218,7 @@ class VisitController extends Controller
         // Logic to notify the host
         $visit = Visitor::where('visit_number', $request->visit_number)->first();
         if ($visit) {
-            Mail::to($visit->host->host_email)->send(new VisitorJoined($visit, $visit->visit_number));
+            Mail::to($visit->host->host_email)->send(new VisitorJoined($visit, $request->visit_number));
             return response()->json(['message' => 'Host has been notified!']);
         }
         return response()->json(['message' => 'Visit number not found.'], 404);
