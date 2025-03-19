@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
     <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
         Visit Status
     </a>
+@else
+    <span class="text-gray-500">Visit Status not available</span>
 @endif
         </section>
 
