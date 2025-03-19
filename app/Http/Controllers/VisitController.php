@@ -172,7 +172,8 @@ class VisitController extends Controller
         Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $host));
 
         // Return success response
-        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
+Log::info("Visit number set in session: " . $visitNumber);
+return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
     }
 
     public function joinVisit(Request $request)
@@ -238,7 +239,7 @@ class VisitController extends Controller
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!")->with('visit_number', $visit->visit_number);
-        
+
     }
 
     public function submitFeedback(Request $request)

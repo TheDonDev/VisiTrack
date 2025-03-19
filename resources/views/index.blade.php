@@ -97,8 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
         <a href="{{ route('join.visit') }}" class="bg-secondary text-white px-6 py-3 rounded">Join a Visit</a>
     </section>
 
-    <!-- Visitor Check-In -->
-    <section class="bg-white shadow-lg rounded-lg p-6 mb-12">
+    <div class="flex">
+        <!-- Visitor Check-In -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 mr-4">
         @if(session('error'))
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline">{{ session('error') }}</span>
@@ -108,10 +109,26 @@ document.addEventListener('DOMContentLoaded', function () {
         <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
             Login / Signup
         </button>
-        <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
-            Visit Status
-        </a>
-    </section>
+@if(session('visit_number'))
+    <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+        Visit Status
+    </a>
+@endif
+        </section>
+
+        <!-- Visit Status -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 ml-4">
+            <h3 class="text-2xl font-bold text-primary mb-4">Visit Status</h3>
+            <form action="{{ route('visit.status') }}" method="GET">
+                <div class="mb-4">
+                    <input type="text" name="visit" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+                    Check Status
+                </button>
+            </form>
+        </section>
+    </div>
 
     <!-- Feedback -->
     <section class="bg-white shadow-lg rounded-lg p-6">
