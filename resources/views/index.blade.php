@@ -1,77 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VisiTrack | Alupe University</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
-<script>
-window.successMessage = "{{ session('success') }}";
-window.visitNumber = "{{ session('visit_number') }}";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisiTrack | Alupe University</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        window.successMessage = "{{ session('success') }}";
+        window.visitNumber = "{{ session('visit_number') }}";
 
-document.addEventListener('DOMContentLoaded', function () {
-    if (window.successMessage) {
-        let message = window.successMessage;
-        if (window.visitNumber) {
-            message += ` You can share this number to let someone else join the visit.`;
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.successMessage) {
+                let message = window.successMessage;
+                if (window.visitNumber) {
+                    message += ` You can share this number to let someone else join the visit.`;
+                }
+                document.getElementById('success-text').innerText = message;
+                document.getElementById('success-message').classList.remove('hidden');
+            }
+        });
+    </script>
+
+    <!-- Success Message Popup -->
+    <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Success!</h2>
+            <p id="success-text"></p>
+            <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
+        </div>
+    </div>
+
+    <!-- Login/Signup Modal -->
+    <div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Login / Signup</h2>
+            <form id="auth-form" action="{{ route('security.signup') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Name" required>
+                </div>
+                <div class="mb-4">
+                    <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+                </div>
+                <div class="mb-4">
+                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Sign Up</button>
+                <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            --primary-color: #004080; /* Alupe's blue */
+            --secondary-color: #ffcc00; /* Alupe's gold */
         }
-        document.getElementById('success-text').innerText = message;
-        document.getElementById('success-message').classList.remove('hidden');
-    }
-});
-</script>
 
-<!-- Success Message Popup -->
-<div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-        <h2 class="text-xl font-bold text-primary">Success!</h2>
-        <p id="success-text"></p>
-        <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
-    </div>
-</div>
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
 
-<!-- Login/Signup Modal -->
-<div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-        <h2 class="text-xl font-bold text-primary">Login / Signup</h2>
-        <form id="auth-form" action="{{ route('security.login') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
-            </div>
-            <div class="mb-4">
-                <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
-            </div>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Login</button>
-            <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
-        </form>
-    </div>
-</div>
+        .text-primary {
+            color: var(--primary-color);
+        }
 
-<style>
-:root {
-    --primary-color: #004080; /* Alupe's blue */
-    --secondary-color: #ffcc00; /* Alupe's gold */
-}
+        .bg-secondary {
+            background-color: var(--secondary-color);
+        }
 
-.bg-primary {
-    background-color: var(--primary-color);
-}
-
-.text-primary {
-    color: var(--primary-color);
-}
-
-.bg-secondary {
-    background-color: var(--secondary-color);
-}
-
-.text-secondary {
-    color: var(--secondary-color);
-}
-</style>
+        .text-secondary {
+            color: var(--secondary-color);
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
@@ -107,15 +113,18 @@ document.addEventListener('DOMContentLoaded', function () {
         @endif
         <h3 class="text-2xl font-bold text-primary mb-4">Visitor Check-In</h3>
         <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-            Login / Signup
+            Log-In
         </button>
-@if(session('visit_number'))
-    <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
-        Visit Status
-    </a>
-@else
-    <span class="text-gray-500">Visit Status not available</span>
-@endif
+        <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+            Sign-Up
+        </button>
+        @if(session('visit_number'))
+            <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+                Visit Status
+            </a>
+        @else
+            <span class="text-gray-500">Visit Status not available</span>
+        @endif
         </section>
 
         <!-- Visit Status -->
@@ -135,21 +144,16 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
     </div>
 
-    <!-- Feedback -->
+    <!-- Instructions Section -->
     <section class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-2xl font-bold text-primary mb-4">Feedback</h3>
-        <form action="{{ route('visits.feedback.submit') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <textarea name="feedback" id="feedback" rows="4"
-                    class="w-full px-3 py-2 border rounded-lg"
-                    placeholder="Please share your feedback..."
-                    required></textarea>
-            </div>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-                Submit Feedback
-            </button>
-        </form>
+        <h3 class="text-2xl font-bold text-primary mb-4">How to Use the System</h3>
+        <p class="mb-4">Follow these steps to book a visit, join a booked visit, and check-in:</p>
+        <ul class="list-disc pl-5 mb-4">
+            <li>Book a visit through the "Book a Visit" button.</li>
+            <li>Join a booked visit using the "Join a Visit" button.</li>
+            <li>Check-in on the day of your visit using the "Visitor Check-In" section.</li>
+        </ul>
+        <p>For any feedback, please use the "Submit Feedback" button below.</p>
     </section>
 </main>
 
