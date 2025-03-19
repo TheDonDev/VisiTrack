@@ -119,14 +119,17 @@ document.addEventListener('DOMContentLoaded', function () {
         <!-- Visit Status -->
         <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 ml-4">
             <h3 class="text-2xl font-bold text-primary mb-4">Visit Status</h3>
-            <form action="{{ route('visit.status', ['visit' => '']) }}" method="GET">
+            <form action="{{ route('visit.status', ['visit' => '']) }}" method="GET" onsubmit="this.action='{{ route('visit.status', ['visit' => '']) }}' + '/' + this.visit.value;">
                 <div class="mb-4">
                     <input type="text" name="visit" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
                 </div>
-                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark" onclick="console.log('Visit Number:', this.visit.value);">
                     Check Status
                 </button>
             </form>
+            <script>
+                console.log('Session Visit Number:', "{{ session('visit_number') }}"); // Debugging statement
+            </script>
         </section>
     </div>
 
