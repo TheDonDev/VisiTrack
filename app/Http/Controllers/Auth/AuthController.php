@@ -18,7 +18,8 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('visits.check-in')->with('success', 'Login successful!');
+            $visitNumber = session('visit_number') ?? 'default_visit_number'; // Fallback value
+            return redirect()->route('visit.status', ['visit' => $visitNumber])->with('success', 'Login successful!');
         }
 
         return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);

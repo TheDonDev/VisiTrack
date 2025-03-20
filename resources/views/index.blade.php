@@ -15,12 +15,17 @@
             if (window.successMessage) {
                 let message = window.successMessage;
                 if (window.visitNumber) {
-                    message += ` You can share this number to let someone else join the visit.`;
+                    message += ` Your visit number is: ${window.visitNumber}. You can share this number to let someone else join the visit.`;
                 }
                 document.getElementById('success-text').innerText = message;
                 document.getElementById('success-message').classList.remove('hidden');
             }
         });
+    </script>
+
+    <!-- Debugging Statement -->
+    <script>
+        console.log('Session Visit Number:', "{{ session('visit_number') }}");
     </script>
 
     <!-- Success Message Popup -->
@@ -35,8 +40,20 @@
     <!-- Login/Signup Modal -->
     <div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 class="text-xl font-bold text-primary">Login / Signup</h2>
-            <form id="auth-form" action="{{ route('security.signup') }}" method="POST">
+            <h2 class="text-xl font-bold text-primary">Login</h2>
+            <form id="auth-form" action="{{ route('security.login') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
+                <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
+            </form>
+            <h2 class="text-xl font-bold text-primary mt-4">Sign Up</h2>
+            <form id="signup-form" action="{{ route('security.signup') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Name" required>
@@ -138,22 +155,22 @@
                     Check Status
                 </button>
             </form>
-            <script>
-                console.log('Session Visit Number:', "{{ session('visit_number') }}"); // Debugging statement
-            </script>
+            <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">
+                Submit Feedback
+            </button>
         </section>
     </div>
 
     <!-- Instructions Section -->
     <section class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-2xl font-bold text-primary mb-4">How to Use the System</h3>
+        <h3 class="text-2xl font-bold text-primary mb-4">How to Use VisiTrack</h3>
         <p class="mb-4">Follow these steps to book a visit, join a booked visit, and check-in:</p>
         <ul class="list-disc pl-5 mb-4">
             <li>Book a visit through the "Book a Visit" button.</li>
             <li>Join a booked visit using the "Join a Visit" button.</li>
             <li>Check-in on the day of your visit using the "Visitor Check-In" section.</li>
         </ul>
-        <p>For any feedback, please use the "Submit Feedback" button below.</p>
+        <p>For any feedback, please use the "Submit Feedback" button above.</p>
     </section>
 </main>
 

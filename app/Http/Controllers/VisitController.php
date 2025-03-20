@@ -173,6 +173,7 @@ class VisitController extends Controller
 
         // Return success response
 Log::info("Visit number set in session: " . $visitNumber);
+session(['visit_number' => $visitNumber]); // Ensure the visit number is stored in the session
 return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
     }
 
