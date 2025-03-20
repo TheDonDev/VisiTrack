@@ -140,7 +140,7 @@
                 Visit Status
             </a>
         @else
-            <span class="text-gray-500">Visit Status not available</span>
+<span class="text-gray-500">Visit Status not available. Please book a visit first to access the status.</span>
         @endif
         </section>
 
