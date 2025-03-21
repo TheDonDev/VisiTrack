@@ -112,6 +112,16 @@ class VisitController extends Controller
             Log::error('Failed to save visitor', ['visit_number' => $visitNumber]);
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
+        // Create new visitor
+        $visitor = Visitor::create([
+            'visitor_name' => $validatedData['visitor_name'],
+            'visitor_last_name' => $validatedData['visitor_last_name'],
+            'designation' => $validatedData['designation'],
+            'organization' => $validatedData['organization'],
+            'visitor_email' => $validatedData['visitor_email'],
+            'visitor_number' => $validatedData['visitor_number'],
+            'id_number' => $validatedData['id_number'],
+        ]);
 
         // Create the visit record
         $visit = Visit::create([
@@ -123,6 +133,7 @@ class VisitController extends Controller
             'visit_from' => $validatedData['visit_from'],
             'visit_to' => $validatedData['visit_to'],
             'purpose_of_visit' => $validatedData['purpose_of_visit'],
+            'visitor_id' => $visitor->id
         ]);
 
         // Associate the visitor with the visit

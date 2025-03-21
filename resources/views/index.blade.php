@@ -135,19 +135,19 @@
         <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
             Sign-Up
         </button>
-@if(session('visit_number') && isset($visit))
-    <a href="{{ route('visit.status', ['visit' => $visit->id]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+{{-- @if(session('visit_number') && isset($visit)) --}}
+    {{-- <a href="{{ route('visit.status', ['visit' => $visit->id]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4"> --}}
         Visit Status
-    </a>
-@else
+    {{-- </a> --}}
+{{-- @else --}}
     <span class="text-gray-500">Visit Status not available. Please book a visit first to access the status.</span>
-@endif
+{{-- @endif --}}
         </section>
 
         <!-- Visit Status -->
         <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 ml-4">
             <h3 class="text-2xl font-bold text-primary mb-4">Visit Status</h3>
-            <form action="{{ route('visit.status', ['visit' => session('visit_number')]) }}" method="GET" onsubmit="if(!this.visit.value) { alert('Please enter a visit number.'); return false; } this.action='{{ route('visit.status', ['visit' => session('visit_number')]) }}' + '/' + this.visit.value;">
+            {{-- <form action="{{ route('visit.status', ['visit' => session('visit_number')]) }}" method="GET" onsubmit="if(!this.visit.value) { alert('Please enter a visit number.'); return false; } this.action='{{ route('visit.status', ['visit' => session('visit_number')]) }}' + '/' + this.visit.value;"> --}}
                 <div class="mb-4">
                     <input type="text" name="visit" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
                 </div>
@@ -170,7 +170,7 @@
             <li>Join a booked visit using the "Join a Visit" button.</li>
             <li>Check-in on the day of your visit using the "Visitor Check-In" section.</li>
         </ul>
-        <p>For any feedback, please use the "Submit Feedback" button above.</p>
+        <p>For any feedback, please use the "Submit Feedback" button below.</p>
     </section>
 </main>
 

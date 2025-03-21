@@ -15,12 +15,10 @@ class Visitor extends Model
         'organization',
         'visitor_email',
         'email',
-        'visit_number',
         'id_number',
         'visitor_number',
         'phone_number',
     ];
-
     protected static function boot()
     {
         parent::boot();
