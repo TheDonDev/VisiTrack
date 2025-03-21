@@ -34,11 +34,7 @@ class Visit extends Model
 
     public static function generateVisitNumber()
     {
-        do {
-            $visitNumber = random_int(1000000000, 9999999999);
-        } while (self::where('visit_number', $visitNumber)->exists());
-
-        return $visitNumber;
+        return Str::uuid()->toString();
     }
 
     // Define relationships
