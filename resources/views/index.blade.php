@@ -135,13 +135,13 @@
         <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
             Sign-Up
         </button>
-        @if(session('visit_number'))
-            <a href="{{ route('visit.status', ['visit' => session('visit_number')]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
-                Visit Status
-            </a>
-        @else
-<span class="text-gray-500">Visit Status not available. Please book a visit first to access the status.</span>
-        @endif
+@if(session('visit_number') && isset($visit))
+    <a href="{{ route('visit.status', ['visit' => $visit->id]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
+        Visit Status
+    </a>
+@else
+    <span class="text-gray-500">Visit Status not available. Please book a visit first to access the status.</span>
+@endif
         </section>
 
         <!-- Visit Status -->

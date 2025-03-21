@@ -68,12 +68,13 @@ class VisitController extends Controller
         return view('book-visit', compact('hosts'));
     }
 
-public function bookVisit(Request $request)
-{
-    // Log the request data for debugging
-    Log::info("Booking visit with data: ", $request->all());
-    // Validate the request data
-    $validatedData = $request->validate([
+    public function bookVisit(Request $request)
+    {
+        // Log the request data for debugging
+        Log::info("Booking visit with data: ", $request->all());
+
+        // Validate the request data
+        $validatedData = $request->validate([
             'visitor_name' => 'required|string',
             'visitor_last_name' => 'required|string',
             'designation' => 'required|string',
@@ -112,73 +113,32 @@ public function bookVisit(Request $request)
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
 
-    // Create the visit record
-    $visit = Visit::create([
-        'visit_number' => $visitNumber,
-        'host_id' => $validatedData['host_id'],
-        'visit_type' => $validatedData['visit_type'],
-        'visit_facility' => $validatedData['visit_facility'],
-        'visit_date' => $validatedData['visit_date'],
-        'visit_from' => $validatedData['visit_from'],
-        'visit_to' => $validatedData['visit_to'],
-        'purpose_of_visit' => $validatedData['purpose_of_visit'],
-    ]);
-
-    // Associate the visitor with the visit
-    $visit->visitors()->attach($visitor->id);
-
-        // Retrieve host details
-        $host = Host::find($request->host_id);
-        if (!$host) {
-            Log::error("Host not found for ID: " . $request->host_id);
-            return redirect()->back()->withErrors(['host' => 'Host not found.']);
-        }
-        Log::info("Retrieved host: " . $host->host_name . " with email: " . $host->host_email);
-        // Log the email addresses being used
-        Log::info("Visitor email: " . $validatedData['visitor_email']);
-        Log::info("Host email: " . $host->host_email);
-        if (empty($validatedData['visitor_email'])) {
-            Log::error("Visitor email is empty.");
-        }
-        if (empty($host->host_email)) {
-            Log::error("Host email is empty.");
-            return redirect()->back()->withErrors(['host' => 'Host email is not set.']);
-        }
-
-        // Log the visit object and its properties
-        Log::info("Visit object details: " . json_encode([
-            'visit' => $visit->toArray(),
-            'visitor_id' => $visit->visitor_id,
-            'host_id' => $visit->host_id,
-            'visit_number' => $visit->visit_number,
-        ]));
-        Log::info("Data being sent to VisitBooked email: " . json_encode([
-            'visit' => $visit->toArray(),
-            'visitNumber' => $visitNumber,
-            'host_name' => $host->host_name,
-            'host_email' => $host->host_email,
-            'host_number' => $host->host_number,
-        ]));
-        Log::info("Visitor data being sent to VisitBooked email: ", [
-            'visitor_name' => $visitor->visitor_name,
-            'visitor_email' => $validatedData['visitor_email'],
+        // Create the visit record
+        $visit = Visit::create([
             'visit_number' => $visitNumber,
+            'host_id' => $validatedData['host_id'],
+            'visit_type' => $validatedData['visit_type'],
+            'visit_facility' => $validatedData['visit_facility'],
+            'visit_date' => $validatedData['visit_date'],
+            'visit_from' => $validatedData['visit_from'],
+            'visit_to' => $validatedData['visit_to'],
+            'purpose_of_visit' => $validatedData['purpose_of_visit'],
         ]);
 
-        Mail::to($validatedData['visitor_email'])->send(new VisitBooked([
-            'visit' => $visit,
-            'visitNumber' => $visitNumber,
-            'host_name' => $host->host_name,
-            'host_email' => $host->host_email,
-            'host_number' => $host->host_number,
-        ]));
+        // Associate the visitor with the visit
+        $visit->visitors()->attach($visitor->id);
 
-        Mail::to($host->host_email)->send(new HostVisitNotification($visitor, $visit, $host));
+        // Log the visit number and set it in the session
+        Log::info("Setting visit number in session: " . $visitNumber);
+        session(['visit_number' => $visitNumber]);
 
-        // Return success response
-Log::info("Visit number set in session: " . $visitNumber);
-session(['visit_number' => $visitNumber]); // Ensure the visit number is stored in the session
-return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber .")->with('visit_number', $visitNumber);
+        // Retrieve the newly created visit
+        $visit = Visit::where('visit_number', $visitNumber)->first(); // Get the visit using the visit number
+
+        // Pass the visit data to the view
+        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber.")
+            ->with('visit_number', $visitNumber)
+            ->with('visit', $visit); // Add this line to pass the visit data
     }
 
     public function joinVisit(Request $request)
@@ -244,7 +204,6 @@ return redirect()->route('index')->with('success', "Visit booked successfully! Y
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!")->with('visit_number', $visit->visit_number);
-
     }
 
     public function submitFeedback(Request $request)
