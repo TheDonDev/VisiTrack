@@ -21,6 +21,14 @@
                 document.getElementById('success-message').classList.remove('hidden');
             }
         });
+
+        function showAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function showCheckInModal() {
+            document.getElementById('checkin-modal').classList.remove('hidden');
+        }
     </script>
 
     <!-- Debugging Statement -->
@@ -37,11 +45,45 @@
         </div>
     </div>
 
-    <!-- Login/Signup Modal -->
+    <!-- Check-In Modal -->
+    <div id="checkin-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Check-In Options</h2>
+            <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
+            <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
+            <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+        </div>
+    </div>
+
+    <!-- Sign-Up Modal -->
+    <div id="signup-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Sign Up</h2>
+            <form action="{{ route('security.signup.submit') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+                </div>
+                <div class="mb-4">
+                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Create Password" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" name="password_confirmation" class="w-full px-3 py-2 border rounded-lg" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Sign Up</button>
+                <button onclick="document.getElementById('signup-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
     <div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 class="text-xl font-bold text-primary">Login</h2>
-            <form id="auth-form" action="{{ route('security.login') }}" method="POST">
+            <h2 class="text-xl font-bold text-primary">Log In</h2>
+            <form action="{{ route('security.login') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
@@ -50,25 +92,7 @@
                     <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
                 </div>
                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
-                <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
-            </form>
-            <h2 class="text-xl font-bold text-primary mt-4">Sign Up</h2>
-            <form id="signup-form" action="{{ route('security.signup.submit') }}" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Name" required>
-                </div>
-                <div class="mb-4">
-                    <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
-                </div>
-                <div class="mb-4">
-                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
-                </div>
-                <div class="mb-4">
-                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
-                </div>
-                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Sign Up</button>
-                <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-secondary text-white px-4 py-2 rounded">Close</button>
+                <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
             </form>
         </div>
     </div>
@@ -120,46 +144,11 @@
         <a href="{{ route('join.visit') }}" class="bg-secondary text-white px-6 py-3 rounded">Join a Visit</a>
     </section>
 
-    <div class="flex">
-        <!-- Visitor Check-In -->
-        <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 mr-4">
-        @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
-        <h3 class="text-2xl font-bold text-primary mb-4">Visitor Check-In</h3>
-        <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-            Log-In
-        </button>
-        <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4">
-            Sign-Up
-        </button>
-{{-- @if(session('visit_number') && isset($visit)) --}}
-    {{-- <a href="{{ route('visit.status', ['visit' => $visit->id]) }}" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark ml-4"> --}}
-        Visit Status
-    {{-- </a> --}}
-{{-- @else --}}
-    <span class="text-gray-500">Visit Status not available. Please book a visit first to access the status.</span>
-{{-- @endif --}}
-        </section>
-
-        <!-- Visit Status -->
-        <section class="bg-white shadow-lg rounded-lg p-6 mb-12 w-1/2 ml-4">
-            <h3 class="text-2xl font-bold text-primary mb-4">Visit Status</h3>
-            {{-- <form action="{{ route('visit.status', ['visit' => session('visit_number')]) }}" method="GET" onsubmit="if(!this.visit.value) { alert('Please enter a visit number.'); return false; } this.action='{{ route('visit.status', ['visit' => session('visit_number')]) }}' + '/' + this.visit.value;"> --}}
-                <div class="mb-4">
-                    <input type="text" name="visit" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter Visit Number" required>
-                </div>
-                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-                    Check Status
-                </button>
-            </form>
-            <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">
-                Submit Feedback
-            </button>
-        </section>
-    </div>
+    <!-- Check-In and Check Status Buttons -->
+    <section class="text-center mb-12">
+        <button onclick="showCheckInModal()" class="bg-primary text-white px-6 py-3 rounded mr-4">Check-In</button>
+        <button class="bg-secondary text-white px-6 py-3 rounded">Check Status</button>
+    </section>
 
     <!-- Instructions Section -->
     <section class="bg-white shadow-lg rounded-lg p-6">
@@ -168,7 +157,7 @@
         <ul class="list-disc pl-5 mb-4">
             <li>Book a visit through the "Book a Visit" button.</li>
             <li>Join a booked visit using the "Join a Visit" button.</li>
-            <li>Check-in on the day of your visit using the "Visitor Check-In" section.</li>
+            <li>Check-in on the day of your visit using the "Check-In" button.</li>
         </ul>
         <p>For any feedback, please use the "Submit Feedback" button below.</p>
     </section>
