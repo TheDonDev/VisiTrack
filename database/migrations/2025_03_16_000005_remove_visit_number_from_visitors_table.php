@@ -4,19 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveVisitorEmailUniqueConstraintFinalVersion extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::table('visitors', function (Blueprint $table) {
-            $table->dropUnique('visitors_visitor_email_unique');
+            $table->dropColumn('visit_number');
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::table('visitors', function (Blueprint $table) {
-            $table->string('visitor_email')->unique()->change();
+            $table->string('visit_number')->nullable();
         });
     }
-}
+};

@@ -112,18 +112,20 @@ public function bookVisit(Request $request)
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
 
-        // Create the visit record with eager loading
-        $visit = Visit::create([
-            'visit_number' => $visitNumber,
-            'visitor_id' => $visitor->id,
-            'host_id' => $validatedData['host_id'],
-            'visit_type' => $validatedData['visit_type'],
-            'visit_facility' => $validatedData['visit_facility'],
-            'visit_date' => $validatedData['visit_date'],
-            'visit_from' => $validatedData['visit_from'],
-            'visit_to' => $validatedData['visit_to'],
-            'purpose_of_visit' => $validatedData['purpose_of_visit'],
-        ])->load('visitor');
+    // Create the visit record
+    $visit = Visit::create([
+        'visit_number' => $visitNumber,
+        'host_id' => $validatedData['host_id'],
+        'visit_type' => $validatedData['visit_type'],
+        'visit_facility' => $validatedData['visit_facility'],
+        'visit_date' => $validatedData['visit_date'],
+        'visit_from' => $validatedData['visit_from'],
+        'visit_to' => $validatedData['visit_to'],
+        'purpose_of_visit' => $validatedData['purpose_of_visit'],
+    ]);
+
+    // Associate the visitor with the visit
+    $visit->visitors()->attach($visitor->id);
 
         // Retrieve host details
         $host = Host::find($request->host_id);

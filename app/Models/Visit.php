@@ -58,6 +58,6 @@ class Visit extends Model
 
     public function visitors()
     {
-        return $this->hasMany(Visitor::class, 'visit_number', 'visit_number');
+        return $this->belongsToMany(Visitor::class, 'visit_visitor');
     }
 }
