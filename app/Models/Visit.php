@@ -34,7 +34,7 @@ class Visit extends Model
 
     public static function generateVisitNumber()
     {
-        return Str::uuid()->toString();
+        return rand(1000000000, 9999999999);
     }
 
     // Define relationships

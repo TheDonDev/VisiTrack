@@ -29,6 +29,18 @@
         function showCheckInModal() {
             document.getElementById('checkin-modal').classList.remove('hidden');
         }
+
+        function togglePasswordVisibility(inputId, toggleId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            if (input.type === "password") {
+                input.type = "text";
+                toggle.innerText = "Hide";
+            } else {
+                input.type = "password";
+                toggle.innerText = "Show";
+            }
+        }
     </script>
 
     <!-- Debugging Statement -->
@@ -68,10 +80,12 @@
                     <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
                 </div>
                 <div class="mb-4">
-                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Create Password" required>
+                    <input type="password" id="signup-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Create Password" required>
+                    <button type="button" id="toggle-signup-password" onclick="togglePasswordVisibility('signup-password', 'toggle-signup-password')" class="text-blue-500">Show</button>
                 </div>
                 <div class="mb-4">
-                    <input type="password" name="password_confirmation" class="w-full px-3 py-2 border rounded-lg" placeholder="Confirm Password" required>
+                    <input type="password" id="signup-password-confirm" name="password_confirmation" class="w-full px-3 py-2 border rounded-lg" placeholder="Confirm Password" required>
+                    <button type="button" id="toggle-signup-password-confirm" onclick="togglePasswordVisibility('signup-password-confirm', 'toggle-signup-password-confirm')" class="text-blue-500">Show</button>
                 </div>
                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Sign Up</button>
                 <button onclick="document.getElementById('signup-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
@@ -89,7 +103,8 @@
                     <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
                 </div>
                 <div class="mb-4">
-                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
+                    <input type="password" id="login-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
+                    <button type="button" id="toggle-login-password" onclick="togglePasswordVisibility('login-password', 'toggle-login-password')" class="text-blue-500">Show</button>
                 </div>
                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
                 <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
