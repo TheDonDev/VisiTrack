@@ -15,7 +15,7 @@
             if (window.successMessage) {
                 let message = window.successMessage;
                 if (window.visitNumber) {
-                    message += ` Your visit number is: ${window.visitNumber}. You can share this number to let someone else join the visit.`;
+                    message += ` `;
                 }
                 document.getElementById('success-text').innerText = message;
                 document.getElementById('success-message').classList.remove('hidden');

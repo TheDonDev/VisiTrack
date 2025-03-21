@@ -112,16 +112,6 @@ class VisitController extends Controller
             Log::error('Failed to save visitor', ['visit_number' => $visitNumber]);
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
-        // Create new visitor
-        $visitor = Visitor::create([
-            'visitor_name' => $validatedData['visitor_name'],
-            'visitor_last_name' => $validatedData['visitor_last_name'],
-            'designation' => $validatedData['designation'],
-            'organization' => $validatedData['organization'],
-            'visitor_email' => $validatedData['visitor_email'],
-            'visitor_number' => $validatedData['visitor_number'],
-            'id_number' => $validatedData['id_number'],
-        ]);
 
         // Create the visit record
         $visit = Visit::create([
@@ -144,12 +134,12 @@ class VisitController extends Controller
         session(['visit_number' => $visitNumber]);
 
         // Retrieve the newly created visit
-        $visit = Visit::where('visit_number', $visitNumber)->first(); // Get the visit using the visit number
+        $visit = Visit::where('visit_number', $visitNumber)->first();
 
         // Pass the visit data to the view
-        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber.")
+        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber. You can share this number to let someone else join the visit.")
             ->with('visit_number', $visitNumber)
-            ->with('visit', $visit); // Add this line to pass the visit data
+            ->with('visit', $visit);
     }
 
     public function joinVisit(Request $request)
