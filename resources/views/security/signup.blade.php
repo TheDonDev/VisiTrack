@@ -12,6 +12,10 @@
         <form action="{{ route('security.signup.submit') }}" method="POST" class="mt-6">
             @csrf
             <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">User Name</label>
+                <input type="text" name="username" id="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your username">
+            </div>
+            <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" name="email" id="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your email">
             </div>

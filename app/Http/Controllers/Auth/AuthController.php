@@ -25,24 +25,25 @@ class AuthController extends Controller
         return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
-public function signup(Request $request)
-{
-    $userCount = User::count();
-    if ($userCount >= 5) {
-        return redirect()->back()->withErrors(['email' => 'User limit reached. Only 5 users can sign up.']);
+    public function signup(Request $request)
+    {
+        $userCount = User::count();
+        if ($userCount >= 5) {
+            return redirect()->back()->withErrors(['email' => 'User limit reached. Only 5 users can sign up.']);
+        }
+
+        $request->validate([
+            'username' => 'required|string|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
+
+        $user = new User();
+        $user->username = $request->username; // Save the username
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
     }
-
-    $request->validate([
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
-    ]);
-
-    $user = new User();
-    $user->email = $request->email;
-    $user->password = Hash::make($request->password);
-    $user->save();
-
-    return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
-}
-
 }

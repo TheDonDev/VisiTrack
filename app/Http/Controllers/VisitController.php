@@ -68,10 +68,12 @@ class VisitController extends Controller
         return view('book-visit', compact('hosts'));
     }
 
-    public function bookVisit(Request $request)
-    {
-        // Validate the request data
-        $validatedData = $request->validate([
+public function bookVisit(Request $request)
+{
+    // Log the request data for debugging
+    Log::info("Booking visit with data: ", $request->all());
+    // Validate the request data
+    $validatedData = $request->validate([
             'visitor_name' => 'required|string',
             'visitor_last_name' => 'required|string',
             'designation' => 'required|string',
