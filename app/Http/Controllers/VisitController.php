@@ -72,6 +72,11 @@ class VisitController extends Controller
     {
         // Log the request data for debugging
         Log::info("Booking visit with data: ", $request->all());
+        // Generate a unique visit number
+        $visitNumber = Visit::generateVisitNumber();
+        // Generate a unique visit number
+        $visitNumber = Visit::generateVisitNumber();
+        Log::info("Generated visit number: " . $visitNumber);
 
         // Validate the request data
         $validatedData = $request->validate([
@@ -136,8 +141,21 @@ class VisitController extends Controller
         // Retrieve the newly created visit
         $visit = Visit::where('visit_number', $visitNumber)->first();
 
+        // Prepare data for the email
+        $emailData = [
+            'visit' => $visit,
+            'host_name' => $visit->host->host_name,
+            'host_email' => $visit->host->host_email,
+            'host_number' => $visit->host->host_number,
+            'visitNumber' => $visitNumber,
+        ];
+
+        // Send email notifications
+        Mail::to($visitor->visitor_email)->send(new VisitBooked($emailData));
+        Mail::to($visit->host->host_email)->send(new HostVisitNotification($visitor, $visit, $visit->host));
+
         // Pass the visit data to the view
-        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber. You can share this number to let someone else join the visit.")
+        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber. You can share this number to let someone else join the visit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ")
             ->with('visit_number', $visitNumber)
             ->with('visit', $visit);
     }
@@ -320,7 +338,14 @@ class VisitController extends Controller
 
     public function showVisitStatus($visit)
     {
-        $visit = Visit::with('host')->findOrFail($visit);
+        Log::info("Retrieving visit with ID: " . $visit);
+        $visitRecord = Visit::with('host')->find($visit);
+        if (!$visitRecord) {
+            Log::error("Visit not found for ID: " . $visit);
+            return redirect()->route('index')->with('error', 'Visit not found.');
+        }
+        $visit = $visitRecord;
+        Log::info("Visit retrieved successfully: ", ['visit' => $visit]);
 
         // Get all visitors associated with this visit
         $visitors = $visit->visitors()->get();
@@ -329,6 +354,12 @@ class VisitController extends Controller
         // Ensure the original visitor is included
         if (!$visitors->contains('id', $visit->visitor_id)) {
             $originalVisitor = Visitor::find($visit->visitor_id);
+            if (!$originalVisitor) {
+                Log::error("Original visitor not found for visit ID: " . $visit->visitor_id);
+            }
+            if (!$originalVisitor) {
+                Log::error("Original visitor not found for visit ID: " . $visit->visitor_id);
+            }
             if ($originalVisitor) {
                 $visitors->push($originalVisitor);
                 $totalVisitors++;
@@ -341,6 +372,6 @@ class VisitController extends Controller
             'visitors' => $visitors,
         ]);
 
-        return view('visit-status', compact('visit', 'totalVisitors', 'visitors'));
+        return view('visit.status', compact('visit', 'totalVisitors', 'visitors'));
     }
 }

@@ -15,7 +15,7 @@
             if (window.successMessage) {
                 let message = window.successMessage;
                 if (window.visitNumber) {
-                    message += ` `;
+                    message += ``;
                 }
                 document.getElementById('success-text').innerText = message;
                 document.getElementById('success-message').classList.remove('hidden');
@@ -112,6 +112,28 @@
         </div>
     </div>
 
+    <!-- Visit Number Modal -->
+    <div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
+            <form onsubmit="event.preventDefault(); redirectToStatus();">
+                <div class="mb-4">
+                    <input type="text" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
+                <button onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function redirectToStatus() {
+            const visitNumber = document.getElementById('visit-number').value;
+            window.location.href = `{{ url('visit.status') }}/${visit}`;
+
+        }
+    </script>
+
     <style>
         :root {
             --primary-color: #004080; /* Alupe's blue */
@@ -162,7 +184,7 @@
     <!-- Check-In and Check Status Buttons -->
     <section class="text-center mb-12">
         <button onclick="showCheckInModal()" class="bg-primary text-white px-6 py-3 rounded mr-4">Check-In</button>
-        <button class="bg-secondary text-white px-6 py-3 rounded">Check Status</button>
+        <button onclick="document.getElementById('visit-number-modal').classList.remove('hidden')" class="bg-secondary text-white px-6 py-3 rounded">Check Status</button>
     </section>
 
     <!-- Instructions Section -->

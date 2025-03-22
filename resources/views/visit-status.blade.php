@@ -48,12 +48,14 @@
             <!-- Visit Information -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
-                    <h3 class="text-lg font-semibold text-primary mb-2">Visit Number:</h3>
-                    <p class="text-gray-700">{{ $visit->visit_number }}</p>
+            <h3 class="text-lg font-semibold text-primary mb-2">Visit Number:</h3>
+            <p class="text-gray-700">{{ request()->query('visit_number') }}</p>
+
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-primary mb-2">Total Visitors:</h3>
-                    <p class="text-gray-700">{{ $totalVisitors }}</p>
+            <h3 class="text-lg font-semibold text-primary mb-2">Total Visitors:</h3>
+            <p class="text-gray-700">{{ $totalVisitors ?? 0 }}</p>
+
                 </div>
             </div>
 
