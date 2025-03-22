@@ -262,20 +262,8 @@ class VisitController extends Controller
     public function processCheckIn(Request $request)
     {
         try {
-            // Validate with custom error message
             $request->validate([
-                'visit_number' => [
-                    'required',
-                    'string',
-                    function ($attribute, $value, $fail) {
-                        Log::info("Validating visit number: " . $value);
-                        if (!Visit::where('visit_number', $value)->exists()) {
-                            Log::warning("Visit number not found: " . $value);
-                            return redirect()->route('index')
-                                ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
-                        }
-                    }
-                ]
+                'visit_number' => 'required|string|exists:visits,visit_number',
             ]);
 
             Log::info("Visit number validated successfully: " . $request->visit_number);
@@ -296,31 +284,19 @@ class VisitController extends Controller
 
             if (!$visitor) {
                 $visitor = Visitor::where('visit_number', $visit->visit_number)->first();
-
                 if (!$visitor) {
                     Log::error("Visitor not found for visit ID: " . $visit->visitor_id . " or visit number: " . $visit->visit_number);
                     return redirect()->back()->withErrors(['visit_number' => 'Visitor not found for this visit.']);
                 }
             }
 
-            // Verify visitor relationship
-            if (!$visit->visitor) {
-                Log::error("Visit has no associated visitor. Visit ID: " . $visit->id);
-                return redirect()->back()->withErrors(['visit' => 'Visit has no associated visitor.']);
-            }
-
-            // Verify host relationship
-            if (!$visit->host) {
-                Log::error("Visit has no associated host. Visit ID: " . $visit->id);
-                return redirect()->back()->withErrors(['visit' => 'Visit has no associated host.']);
-            }
 
             try {
                 // Log before redirect
                 Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
 
                 // Redirect to visit status page
-                return redirect()->route('visits.status', ['visit' => $visit->id])
+                return redirect()->route('visits.status', ['visit' => $visit->visit_number])
                     ->with('success', 'Check-in successful!');
             } catch (\Exception $e) {
                 Log::error("Error during check-in process: " . $e->getMessage());
@@ -336,36 +312,31 @@ class VisitController extends Controller
                 ->with('error', 'An error occurred during check-in. Please try again.');
         }
     }
-
     public function showVisitStatus($visit)
     {
-        Log::info("Retrieving visit with ID: " . $visit);
-        $visitRecord = Visit::with('host')->find($visit);
-        if (!$visitRecord) {
-            Log::error("Visit not found for ID: " . $visit);
-            return redirect()->route('index')->with('error', 'Visit not found.');
+        // Check if the input is a visit number (string) or an ID (integer)
+        if (!is_numeric($visit)) {
+            $visitRecord = Visit::where('visit_number', $visit)->with('host', 'visitors')->first();
+            if (!$visitRecord) {
+                Log::error("Visit not found for visit number: " . $visit);
+                return redirect()->route('index')->with('error', 'Visit not found.');
+            }
+            $visit = $visitRecord;
+        } else {
+            Log::info("Retrieving visit with ID: " . $visit);
+            $visitRecord = Visit::with('host', 'visitors')->find($visit);
+            if (!$visitRecord) {
+                Log::error("Visit not found for ID: " . $visit);
+                return redirect()->route('index')->with('error', 'Visit not found.');
+            }
+            $visit = $visitRecord;
         }
-        $visit = $visitRecord;
+
         Log::info("Visit retrieved successfully: ", ['visit' => $visit]);
 
-        // Get all visitors associated with this visit
-        $visitors = $visit->visitors()->get();
+        // Get all visitors associated with this visit (already eager loaded)
+        $visitors = $visit->visitors;
         $totalVisitors = $visitors->count();
-
-        // Ensure the original visitor is included
-        if (!$visitors->contains('id', $visit->visitor_id)) {
-            $originalVisitor = Visitor::find($visit->visitor_id);
-            if (!$originalVisitor) {
-                Log::error("Original visitor not found for visit ID: " . $visit->visitor_id);
-            }
-            if (!$originalVisitor) {
-                Log::error("Original visitor not found for visit ID: " . $visit->visitor_id);
-            }
-            if ($originalVisitor) {
-                $visitors->push($originalVisitor);
-                $totalVisitors++;
-            }
-        }
 
         Log::info("Visit data being passed to view:", [
             'visit' => $visit,

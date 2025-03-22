@@ -9,7 +9,8 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
         window.successMessage = "{{ session('success') }}";
-        window.visitNumber = "{{ session('visit_number') }}";
+window.visitNumber = "{{ session('visit_number') ?? '' }}";
+
 
         document.addEventListener('DOMContentLoaded', function () {
             if (window.successMessage) {
@@ -52,7 +53,14 @@
     <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h2 class="text-xl font-bold text-primary">Success!</h2>
-            <p id="success-text"></p>
+<p id="success-text">
+    @if(session('visit_number'))
+        Your visit number is: {{ session('visit_number') }}
+    @else
+        Visit number is not available. Please book a visit to get your visit number.
+    @endif
+</p>
+
             <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
         </div>
     </div>
@@ -112,19 +120,19 @@
         </div>
     </div>
 
-    <!-- Visit Number Modal -->
-    <div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-            <form onsubmit="event.preventDefault(); redirectToStatus();">
-                <div class="mb-4">
-                    <input type="text" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
-                </div>
-                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
-                <button onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
-            </form>
-        </div>
+<!-- Visit Number Modal -->
+<div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
+        <form id="visit-status-form" method="GET" action="{{ isset($visitNumber) && $visitNumber ? route('visits.status', ['visit' => $visitNumber]) : '#' }}">
+            <div class="mb-4">
+                <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+            </div>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
+            <button type="button" onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+        </form>
     </div>
+</div>
 
     <script>
         function redirectToStatus() {
