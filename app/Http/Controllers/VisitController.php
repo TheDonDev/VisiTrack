@@ -137,6 +137,7 @@ class VisitController extends Controller
         // Log the visit number and set it in the session
         Log::info("Setting visit number in session: " . $visitNumber);
         session(['visit_number' => $visitNumber]);
+        Log::info("Current session data: ", session()->all());
 
         // Retrieve the newly created visit
         $visit = Visit::where('visit_number', $visitNumber)->first();
