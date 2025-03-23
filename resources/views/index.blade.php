@@ -11,11 +11,8 @@
     <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h2 class="text-xl font-bold text-primary">Success!</h2>
-            <p id="success-message">
-                {{ session('success') }}
-                @if(session('visit_number'))
-                    Your visit number is: {{ session('visit_number') }}
-                @endif
+            <p id="success-text">
+                {{-- Display the success message here --}}
             </p>
             <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
         </div>
@@ -25,6 +22,12 @@
     <div id="checkin-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h2 class="text-xl font-bold text-primary">Check-In Options</h2>
+            <script>
+                function showAuthModal() {
+                    document.getElementById('auth-modal').classList.remove('hidden');
+                }
+            </script>
+            
             <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
             <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
             <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
@@ -35,25 +38,54 @@
     <div id="signup-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h2 class="text-xl font-bold text-primary">Sign Up</h2>
-            <form action="{{ route('security.signup.submit') }}" method="POST">
+            <form id="signup-form" action="{{ route('security.signup.submit') }}" method="POST">
                 @csrf
                 <div class="mb-4">
-                    <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+                    <input type="text" id="username" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+                    @error('username')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
-                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
+                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <input type="password" id="signup-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Create Password" required>
                     <button type="button" id="toggle-signup-password" onclick="togglePasswordVisibility('signup-password', 'toggle-signup-password')" class="text-blue-500">Show</button>
+                    @error('password')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <input type="password" id="signup-password-confirm" name="password_confirmation" class="w-full px-3 py-2 border rounded-lg" placeholder="Confirm Password" required>
                     <button type="button" id="toggle-signup-password-confirm" onclick="togglePasswordVisibility('signup-password-confirm', 'toggle-signup-password-confirm')" class="text-blue-500">Show</button>
+                    @error('password_confirmation')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Sign Up</button>
-                <button onclick="document.getElementById('signup-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+                <button type="button" onclick="document.getElementById('signup-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
             </form>
+
+            <script>
+                document.getElementById('signup-form').addEventListener('submit', function(event) {
+                    const username = document.getElementById('username').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('signup-password').value;
+                    const confirmPassword = document.getElementById('signup-password-confirm').value;
+
+                    if (username === '' || email === '' || password === '' || confirmPassword === '') {
+                        alert('All fields are required.');
+                        event.preventDefault();
+                    } else if (password !== confirmPassword) {
+                        alert('Passwords do not match.');
+                        event.preventDefault();
+                    }
+                });
+            </script>
         </div>
     </div>
 
@@ -162,5 +194,34 @@
         <p>&copy; 2025 Alupe University. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    // Check if there's a success message in the session
+    window.onload = function() {
+        @if(session('success'))
+            document.getElementById('success-message').classList.remove('hidden');
+            document.getElementById('success-text').innerHTML = "{!! session('success') !!}";
+        @endif
+    };
+    function showCheckInModal() {
+        document.getElementById('checkin-modal').classList.remove('hidden');
+    }
+
+    function showAuthModal() {
+        document.getElementById('auth-modal').classList.remove('hidden');
+    }
+
+    function togglePasswordVisibility(passwordFieldId, toggleButtonId) {
+        const passwordField = document.getElementById(passwordFieldId);
+        const toggleButton = document.getElementById(toggleButtonId);
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleButton.textContent = "Hide";
+        } else {
+            passwordField.type = "password";
+            toggleButton.textContent = "Show";
+        }
+    }
+</script>
 </body>
 </html>

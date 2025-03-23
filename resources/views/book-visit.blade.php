@@ -59,7 +59,7 @@
     <main class="container mx-auto mt-4 flex-grow">
         @if (session('success'))
             <div class="bg-green-500 text-white p-4 rounded mb-4">
-                {!! str_replace(session('visit_number'), '<span style="color: red; font-weight: bold;">'.session('visit_number').'</span>', session('success')) !!}
+                {!! session('success') !!}
             </div>
         @endif
         <section class="bg-white shadow-lg rounded-lg p-4 form-container">
