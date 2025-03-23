@@ -6,61 +6,17 @@
     <title>VisiTrack | Alupe University</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        window.successMessage = "{{ session('success') }}";
-window.visitNumber = "{{ session('visit_number') ?? '' }}";
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.successMessage) {
-                let message = window.successMessage;
-                if (window.visitNumber) {
-                    message += ``;
-                }
-                document.getElementById('success-text').innerText = message;
-                document.getElementById('success-message').classList.remove('hidden');
-            }
-        });
-
-        function showAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-
-        function showCheckInModal() {
-            document.getElementById('checkin-modal').classList.remove('hidden');
-        }
-
-        function togglePasswordVisibility(inputId, toggleId) {
-            const input = document.getElementById(inputId);
-            const toggle = document.getElementById(toggleId);
-            if (input.type === "password") {
-                input.type = "text";
-                toggle.innerText = "Hide";
-            } else {
-                input.type = "password";
-                toggle.innerText = "Show";
-            }
-        }
-    </script>
-
-    <!-- Debugging Statement -->
-    <script>
-        console.log('Session Visit Number:', "{{ session('visit_number') }}");
-    </script>
 
     <!-- Success Message Popup -->
     <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h2 class="text-xl font-bold text-primary">Success!</h2>
-<p id="success-text">
-    @if(session('visit_number'))
-        Your visit number is: {{ session('visit_number') }}
-    @else
-        Visit number is not available. Please book a visit to get your visit number.
-    @endif
-</p>
-
+            <p id="success-message">
+                {{ session('success') }}
+                @if(session('visit_number'))
+                    Your visit number is: {{ session('visit_number') }}
+                @endif
+            </p>
             <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-primary text-white px-4 py-2 rounded">Close</button>
         </div>
     </div>
@@ -120,27 +76,19 @@ window.visitNumber = "{{ session('visit_number') ?? '' }}";
         </div>
     </div>
 
-<!-- Visit Number Modal -->
-<div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-        <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-        <form id="visit-status-form" method="GET" action="{{ isset($visitNumber) && $visitNumber ? route('visits.status', ['visit' => $visitNumber]) : '#' }}">
-            <div class="mb-4">
-                <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
-            </div>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
-            <button type="button" onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
-        </form>
+    <!-- Visit Number Modal -->
+    <div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
+            <form id="visit-status-form" method="GET" action="{{ route('visits.status') }}">
+                <div class="mb-4">
+                    <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                </div>
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
+                <button type="button" onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+            </form>
+        </div>
     </div>
-</div>
-
-    <script>
-        function redirectToStatus() {
-            const visitNumber = document.getElementById('visit-number').value;
-            window.location.href = `{{ url('visit.status') }}/${visit}`;
-
-        }
-    </script>
 
     <style>
         :root {

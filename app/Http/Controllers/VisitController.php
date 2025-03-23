@@ -156,7 +156,7 @@ class VisitController extends Controller
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($visitor, $visit, $visit->host));
 
         // Pass the visit data to the view
-        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber. You can share this number to let someone else join the visit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ")
+        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: $visitNumber.")
             ->with('visit_number', $visitNumber)
             ->with('visit', $visit);
     }
@@ -223,7 +223,7 @@ class VisitController extends Controller
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
 
         // Return success response
-        return redirect()->route('index')->with('success', "You have joined the visit successfully!")->with('visit_number', $visit->visit_number);
+        return redirect()->route('index')->with('success', "You have successfully joined the visit!");
     }
 
     public function submitFeedback(Request $request)
@@ -312,38 +312,22 @@ class VisitController extends Controller
                 ->with('error', 'An error occurred during check-in. Please try again.');
         }
     }
-    public function showVisitStatus($visit)
+    public function showVisitStatus(Request $request)
     {
-        // Check if the input is a visit number (string) or an ID (integer)
-        if (!is_numeric($visit)) {
-            $visitRecord = Visit::where('visit_number', $visit)->with('host', 'visitors')->first();
-            if (!$visitRecord) {
-                Log::error("Visit not found for visit number: " . $visit);
-                return redirect()->route('index')->with('error', 'Visit not found.');
-            }
-            $visit = $visitRecord;
-        } else {
-            Log::info("Retrieving visit with ID: " . $visit);
-            $visitRecord = Visit::with('host', 'visitors')->find($visit);
-            if (!$visitRecord) {
-                Log::error("Visit not found for ID: " . $visit);
-                return redirect()->route('index')->with('error', 'Visit not found.');
-            }
-            $visit = $visitRecord;
-        }
-
-        Log::info("Visit retrieved successfully: ", ['visit' => $visit]);
-
-        // Get all visitors associated with this visit (already eager loaded)
-        $visitors = $visit->visitors;
-        $totalVisitors = $visitors->count();
-
-        Log::info("Visit data being passed to view:", [
-            'visit' => $visit,
-            'totalVisitors' => $totalVisitors,
-            'visitors' => $visitors,
+        $request->validate([
+            'visit' => 'required|string|exists:visits,visit_number',
         ]);
 
-        return view('visit.status', compact('visit', 'totalVisitors', 'visitors'));
+        $visitNumber = $request->input('visit');
+        $visitRecord = Visit::where('visit_number', $visitNumber)->with('host', 'visitors')->first();
+
+        if (!$visitRecord) {
+            return redirect()->route('index')->with('error', 'Visit not found.');
+        }
+
+        $visitors = $visitRecord->visitors;
+        $totalVisitors = $visitors->count();
+
+        return view('visit-status', compact('visitRecord', 'totalVisitors', 'visitors'));
     }
 }

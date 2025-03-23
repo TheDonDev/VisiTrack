@@ -38,7 +38,7 @@ Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.vi
 Route::get('/check-in', [VisitController::class, 'showCheckInForm'])->name('visits.check-in');
 Route::post('/check-in', [VisitController::class, 'processCheckIn'])->name('visits.check-in.submit');
 
-Route::get('/visit-status/{visit}', [VisitController::class, 'showVisitStatus'])->name('visits.status');
+Route::get('/visit-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
 
 Route::post('/submit-feedback', [VisitController::class, 'submitFeedback'])->name('visits.feedback.submit');
 

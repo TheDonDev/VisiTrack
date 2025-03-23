@@ -49,7 +49,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
             <h3 class="text-lg font-semibold text-primary mb-2">Visit Number:</h3>
-            <p class="text-gray-700">{{ request()->query('visit_number') }}</p>
+            <p class="text-gray-700">{{ $visitRecord->visit_number }}</p>
 
                 </div>
                 <div>
@@ -65,15 +65,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Name:</h4>
-                        <p class="text-gray-700">{{ $visit->host->host_name }}</p>
+                        <p class="text-gray-700">{{ $visitRecord->host->host_name }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Email:</h4>
-                        <p class="text-gray-700">{{ $visit->host->host_email }}</p>
+                        <p class="text-gray-700">{{ $visitRecord->host->host_email }}</p>
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold text-primary mb-2">Host Phone:</h4>
-                        <p class="text-gray-700">{{ $visit->host->host_number }}</p>
+                        <p class="text-gray-700">{{ $visitRecord->host->host_number }}</p>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                             @foreach($visitors as $visitor)
                             <tr class="border-b">
                                 <td class="px-4 py-2 text-gray-700">
-                                    @if($visitor->id === $visit->visitor_id)
+                                    @if($visitor->id === $visitRecord->visitor_id)
                                         <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Booked</span>
                                     @else
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Joined</span>
