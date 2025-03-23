@@ -156,7 +156,7 @@ class VisitController extends Controller
         Mail::to($visit->host->host_email)->send(new HostVisitNotification($visitor, $visit, $visit->host));
 
         // Pass the visit data to the view
-        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: <span style='color: red; font-weight: bold;'>$visitNumber</span>. You can share this number to let someone else join the visit.")
+        return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: <span style='color: red; font-weight: bold;'>$visitNumber</span> . You can share this number to let someone else join the visit.")
             ->with('visit_number', $visitNumber);
     }
 

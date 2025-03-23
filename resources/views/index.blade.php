@@ -27,7 +27,7 @@
                     document.getElementById('auth-modal').classList.remove('hidden');
                 }
             </script>
-            
+            <p class="mt-4">Please log in to check-in.</p>
             <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
             <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
             <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
