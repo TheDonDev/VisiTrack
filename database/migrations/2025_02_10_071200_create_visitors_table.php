@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
-            $table->string('visitor_name');
-            $table->string('visitor_last_name');
-            $table->string('designation');
-            $table->string('organization');
-            $table->string('visitor_email')->unique();
-            $table->string('visitor_number');
-            $table->string('id_number');
-            $table->string('visit_number')->nullable();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email')->unique();
+            $table->string('phone_number');
+            $table->string('designation')->nullable(); // Allow null for designation
+            $table->string('organization')->nullable(); // Allow null for organization
+            $table->string('id_number')->nullable(); // Allow null for ID number
             $table->timestamps();
         });
     }

@@ -79,13 +79,13 @@ class VisitController extends Controller
         Log::info("Generated visit number: " . $visitNumber);
 
         // Validate the request data
-        $validatedData = $request->validate([
-            'visitor_name' => 'required|string',
-            'visitor_last_name' => 'required|string',
+    $validatedData = $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email',
+            'phone_number' => 'required|string',
             'designation' => 'required|string',
             'organization' => 'required|string',
-            'visitor_email' => 'required|email',
-            'visitor_number' => 'required|string',
             'id_number' => 'required|string',
             'visit_type' => 'required|string',
             'visit_facility' => 'required|string',
@@ -97,20 +97,18 @@ class VisitController extends Controller
         ]);
 
         // Generate a unique visit number
-        $visitNumber = Visit::generateVisitNumber();
+    $visitNumber = Visit::generateVisitNumber();
 
-        // Create new visitor for this visit
-        $visitor = new Visitor();
-        $visitor->fill([
-            'visitor_name' => $validatedData['visitor_name'],
-            'visitor_last_name' => $validatedData['visitor_last_name'],
-            'designation' => $validatedData['designation'],
-            'organization' => $validatedData['organization'],
-            'visitor_email' => $validatedData['visitor_email'],
-            'visitor_number' => $validatedData['visitor_number'],
-            'id_number' => $validatedData['id_number'],
-            'visit_number' => $visitNumber,
-        ]);
+       // Create the visitor using Visitor::findOrCreate (or create if new)
+    $visitor = Visitor::findOrCreate([
+        'first_name' => $validatedData['first_name'],
+        'last_name' => $validatedData['last_name'],
+        'email' => $validatedData['email'],
+        'phone_number' => $validatedData['phone_number'],
+        'designation' => $validatedData['designation'],
+        'organization' => $validatedData['organization'],
+        'id_number' => $validatedData['id_number'],
+    ]);
 
         // Save the visitor
         if (!$visitor->save()) {
@@ -118,21 +116,22 @@ class VisitController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
 
-        // Create the visit record
-        $visit = Visit::create([
-            'visit_number' => $visitNumber,
-            'host_id' => $validatedData['host_id'],
-            'visit_type' => $validatedData['visit_type'],
-            'visit_facility' => $validatedData['visit_facility'],
-            'visit_date' => $validatedData['visit_date'],
-            'visit_from' => $validatedData['visit_from'],
-            'visit_to' => $validatedData['visit_to'],
-            'purpose_of_visit' => $validatedData['purpose_of_visit'],
-            'visitor_id' => $visitor->id
-        ]);
+
+    // Create the visit record
+    $visit = Visit::create([
+        'visit_number' => $visitNumber,
+        'visitor_id' => $visitor->id, // Foreign key to the visitor
+        'host_id' => $validatedData['host_id'],
+        'visit_type' => $validatedData['visit_type'],
+        'visit_facility' => $validatedData['visit_facility'],
+        'visit_date' => $validatedData['visit_date'],
+        'visit_from' => $validatedData['visit_from'],
+        'visit_to' => $validatedData['visit_to'],
+        'purpose_of_visit' => $validatedData['purpose_of_visit'],
+    ]);
 
         // Associate the visitor with the visit
-        $visit->visitors()->attach($visitor->id);
+    $visit->visitors()->attach($visitor->id);
 
         // Log the visit number and set it in the session
         Log::info("Setting visit number in session: " . $visitNumber);

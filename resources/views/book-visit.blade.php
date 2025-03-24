@@ -76,12 +76,12 @@
                     </div>
                 @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full" required>
-                    <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
+                    <input type="text" name="first_name" placeholder="First Name" class="border p-2 rounded w-full" required>
+                    <input type="text" name="last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
                     <input type="text" name="designation" placeholder="Designation" class="border p-2 rounded w-full" required>
                     <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
-                    <input type="email" name="visitor_email" placeholder="Email Address" class="border p-2 rounded w-full" required>
-                    <input type="text" name="visitor_number" placeholder="Phone Number" class="border p-2 rounded w-full" required>
+                    <input type="email" name="email" placeholder="Email Address" class="border p-2 rounded w-full" required>
+                    <input type="text" name="phone_number" placeholder="Phone Number" class="border p-2 rounded w-full" required>
                     <input type="text" name="id_number" placeholder="ID Number" class="border p-2 rounded w-full" required>
                     <select name="visit_type" class="border p-2 rounded w-full" required>
                         <option value="" disabled selected>Visit Type</option>

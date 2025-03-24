@@ -9,8 +9,9 @@ class AddUsernameToUsersTable extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->unique()->after('id'); // Add username column after id
-        });
+            $table->string('username')->nullable()->unique()->after('id'); // Make it nullable
+});
+
     }
 
     public function down(): void
