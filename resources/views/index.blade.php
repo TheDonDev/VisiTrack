@@ -27,7 +27,6 @@
                     document.getElementById('auth-modal').classList.remove('hidden');
                 }
             </script>
-            <p class="mt-4">Please log in to check-in.</p>
             <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
             <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
             <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
@@ -54,14 +53,12 @@
                 </div>
                 <div class="mb-4">
                     <input type="password" id="signup-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Create Password" required>
-                    <button type="button" id="toggle-signup-password" onclick="togglePasswordVisibility('signup-password', 'toggle-signup-password')" class="text-blue-500">Show</button>
                     @error('password')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="mb-4">
                     <input type="password" id="signup-password-confirm" name="password_confirmation" class="w-full px-3 py-2 border rounded-lg" placeholder="Confirm Password" required>
-                    <button type="button" id="toggle-signup-password-confirm" onclick="togglePasswordVisibility('signup-password-confirm', 'toggle-signup-password-confirm')" class="text-blue-500">Show</button>
                     @error('password_confirmation')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -100,7 +97,6 @@
                 </div>
                 <div class="mb-4">
                     <input type="password" id="login-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
-                    <button type="button" id="toggle-login-password" onclick="togglePasswordVisibility('login-password', 'toggle-login-password')" class="text-blue-500">Show</button>
                 </div>
                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
                 <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
@@ -177,7 +173,7 @@
 
     <!-- Instructions Section -->
     <section class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-2xl font-bold text-primary mb-4">How to Use VisiTrack</h3>
+        <h3 class="text-2xl font-bold text-primary mb-4">How it  <span style='color:  #ffcc00; font-weight: bold;'>Works</span></h3>
         <p class="mb-4">Follow these steps to book a visit, join a booked visit, and check-in:</p>
         <ul class="list-disc pl-5 mb-4">
             <li>Book a visit through the "Book a Visit" button.</li>

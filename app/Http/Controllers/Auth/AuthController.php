@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -17,32 +18,29 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $visitNumber = session('visit_number') ?? 'default_visit_number'; // Fallback value
-            return redirect()->route('visit.status', ['visit' => $visitNumber])->with('success', 'Login successful!');
+        try {
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return redirect()->route('index')->with('success', 'Login successful!'); // Redirect to index after successful login
+            }
+            throw ValidationException::withMessages(['email' => 'Invalid credentials.']); // Throw exception for better error handling
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
         }
-
-        return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
     public function signup(Request $request)
     {
-        $userCount = User::count();
-        if ($userCount >= 5) {
-            return redirect()->back()->withErrors(['email' => 'User limit reached. Only 5 users can sign up.']);
-        }
-
         $request->validate([
             'username' => 'required|string|unique:users,username',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
         ]);
 
-        $user = new User();
-        $user->username = $request->username; // Save the username
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
         return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
     }
