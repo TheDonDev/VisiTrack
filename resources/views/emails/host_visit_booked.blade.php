@@ -27,9 +27,9 @@ margin: 5px 0;
 <p>A new visit has been booked!</p>
 <div class="details">
 <p><strong>Visitor Details:</strong></p>
-<p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
-<p>Email: {{ $visitor->visitor_email }}</p>
-<p>Phone Number: {{ $visitor->visitor_number }}</p>
+<p>Name: {{ $visitor->first_name }} {{ $visitor->last_name }}</p>
+<p>Email: {{ $visitor->email }}</p>
+<p>Phone Number: {{ $visitor->phone_number }}</p>
 <p>Designation: {{ $visitor->designation }}</p>
 <p>Organization: {{ $visitor->organization }}</p>
 <p>ID Number: {{ $visitor->id_number }}</p>

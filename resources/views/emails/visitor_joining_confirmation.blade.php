@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <h1>Visit Joining Confirmation</h1>
-        <p>Dear {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }},</p>
+        <p>Dear {{ $visitor->first_name }} {{ $visitor->last_name }},</p>
         <p>You have successfully joined the following visit:</p>
 
         <div class="details">

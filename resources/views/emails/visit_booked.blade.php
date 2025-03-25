@@ -40,13 +40,13 @@
     <div class="container">
         <h1>Your Visit has been Booked!</h1>
 
-        <p>Dear {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }},</p>
+        <p>Dear {{ $visitor->first_name }} {{ $visitor->last_name }},</p>
 
         <p>Your visit details are as follows:</p>
 
         <div class="details">
             <p><strong>Visitor Details:</strong></p>
-            <p>Name: {{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</p>
+            <p>Name: {{ $visitor->first_name }} {{ $visitor->last_name }}</p>
             <p>Designation: {{ $visitor->designation }}</p>
             <p>Organization: {{ $visitor->organization }}</p>
             <p>ID Number: {{ $visitor->id_number }}</p>
