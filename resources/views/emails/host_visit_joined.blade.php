@@ -44,12 +44,12 @@
 
         <div class="details">
             <p><strong>Visitor Details:</strong></p>
-            <p>Name: {{ $visitor->first_name }} {{ $visitor->last_name }}</p>
-            <p>Email: {{ $visitor->email }}</p>
-            <p>Phone: {{ $visitor->phone_number }}</p>
-            <p>ID Number: {{ $visitor->id_number }}</p>
-            <p>Designation: {{ $visitor->designation }}</p>
-            <p>Organization: {{ $visitor->organization }}</p>
+            <p>Name: {{ $joiningVisitor->first_name }} {{ $joiningVisitor->last_name }}</p>
+            <p>Email: {{ $joiningVisitor->email }}</p>
+            <p>Phone: {{ $joiningVisitor->phone_number }}</p>
+            <p>ID Number: {{ $joiningVisitor->id_number }}</p>
+            <p>Designation: {{ $joiningVisitor->designation }}</p>
+            <p>Organization: {{ $joiningVisitor->organization }}</p>
         </div>
 
         <div class="details">

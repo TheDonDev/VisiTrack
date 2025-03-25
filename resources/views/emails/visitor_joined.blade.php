@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <h1>New Visitor Joined Your Visit</h1>
-        <p>Dear {{ $originalVisitor->visitor_name }} {{ $originalVisitor->visitor_last_name }},</p>
+        <p>Dear {{ $visitor->first_name }} {{ $visitor->last_name }},</p>
         <p>A new visitor has joined your visit:</p>
         <div class="details">
             <p><strong>Visitor Details:</strong></p>

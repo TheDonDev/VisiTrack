@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use App\Mail\VisitBooked;
 use App\Mail\VisitorJoined;
 use App\Mail\HostVisitNotification;
+use App\Mail\HostVisitJoined; // Import the new mailable
 use App\Mail\VisitorCheckedIn;
 use App\Mail\HostVisitorCheckedIn;
 
@@ -212,7 +213,7 @@ class VisitController extends Controller
             Log::info('Sending email');
             Mail::to($joiningVisitor->email)->send(new VisitorJoined($joiningVisitor, $visit, true));
             Mail::to($visit->visitor->email)->send(new VisitorJoined($joiningVisitor, $visit, false));
-            Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
+            Mail::to($visit->host->host_email)->send(new HostVisitJoined($joiningVisitor, $visit, $visit->host)); // Use new mailable
             Log::info('Emails sent successfully.');
         } catch (\Exception $e) {
             Log::error('Error sending emails:', ['exception' => $e]);
