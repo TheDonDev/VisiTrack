@@ -10,11 +10,11 @@ class Visit extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'visitor_name',
-        'visitor_last_name',
+        'first_name',
+        'last_name',
         'designation',
         'organization',
-        'visitor_email',
+        'email',
         'visit_number',
         'id_number',
         'visit_type',
@@ -34,7 +34,7 @@ class Visit extends Model
 
     public static function generateVisitNumber()
     {
-        return rand(1000000000, 9999999999);
+        return rand(100000, 999999);
     }
 
     // Define relationships

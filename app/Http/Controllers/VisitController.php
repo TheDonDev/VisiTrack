@@ -74,12 +74,10 @@ class VisitController extends Controller
         Log::info("Booking visit with data: ", $request->all());
         // Generate a unique visit number
         $visitNumber = Visit::generateVisitNumber();
-        // Generate a unique visit number
-        $visitNumber = Visit::generateVisitNumber();
         Log::info("Generated visit number: " . $visitNumber);
 
         // Validate the request data
-    $validatedData = $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|email',
@@ -96,19 +94,16 @@ class VisitController extends Controller
             'host_id' => 'required|exists:hosts,id',
         ]);
 
-        // Generate a unique visit number
-    $visitNumber = Visit::generateVisitNumber();
-
-       // Create the visitor using Visitor::findOrCreate (or create if new)
-    $visitor = Visitor::findOrCreate([
-        'first_name' => $validatedData['first_name'],
-        'last_name' => $validatedData['last_name'],
-        'email' => $validatedData['email'],
-        'phone_number' => $validatedData['phone_number'],
-        'designation' => $validatedData['designation'],
-        'organization' => $validatedData['organization'],
-        'id_number' => $validatedData['id_number'],
-    ]);
+        // Create the visitor using Visitor::findOrCreate (or create if new)
+        $visitor = Visitor::findOrCreate([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'email' => $validatedData['email'],
+            'phone_number' => $validatedData['phone_number'],
+            'designation' => $validatedData['designation'],
+            'organization' => $validatedData['organization'],
+            'id_number' => $validatedData['id_number'],
+        ]);
 
         // Save the visitor
         if (!$visitor->save()) {
@@ -116,34 +111,31 @@ class VisitController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to save visitor information. Please try again.']);
         }
 
-
-    // Create the visit record
-    $visit = Visit::create([
-        'visit_number' => $visitNumber,
-        'visitor_id' => $visitor->id, // Foreign key to the visitor
-        'host_id' => $validatedData['host_id'],
-        'visit_type' => $validatedData['visit_type'],
-        'visit_facility' => $validatedData['visit_facility'],
-        'visit_date' => $validatedData['visit_date'],
-        'visit_from' => $validatedData['visit_from'],
-        'visit_to' => $validatedData['visit_to'],
-        'purpose_of_visit' => $validatedData['purpose_of_visit'],
-    ]);
+        // Create the visit record
+        $visit = Visit::create([
+            'visit_number' => $visitNumber,
+            'visitor_id' => $visitor->id, // Foreign key to the visitor
+            'host_id' => $validatedData['host_id'],
+            'visit_type' => $validatedData['visit_type'],
+            'visit_facility' => $validatedData['visit_facility'],
+            'visit_date' => $validatedData['visit_date'],
+            'visit_from' => $validatedData['visit_from'],
+            'visit_to' => $validatedData['visit_to'],
+            'purpose_of_visit' => $validatedData['purpose_of_visit'],
+        ]);
 
         // Associate the visitor with the visit
-    $visit->visitors()->attach($visitor->id);
+        $visit->visitors()->attach($visitor->id);
 
         // Log the visit number and set it in the session
         Log::info("Setting visit number in session: " . $visitNumber);
         session(['visit_number' => $visitNumber]);
         Log::info("Current session data: ", session()->all());
 
-        // Retrieve the newly created visit
-        $visit = Visit::where('visit_number', $visitNumber)->first();
-
         // Prepare data for the email
         $emailData = [
             'visit' => $visit,
+            'visitor' => $visit->visitor,
             'host_name' => $visit->host->host_name,
             'host_email' => $visit->host->host_email,
             'host_number' => $visit->host->host_number,
@@ -151,8 +143,14 @@ class VisitController extends Controller
         ];
 
         // Send email notifications
-        Mail::to($visitor->visitor_email)->send(new VisitBooked($emailData));
-        Mail::to($visit->host->host_email)->send(new HostVisitNotification($visitor, $visit, $visit->host));
+        try {
+            Mail::to($emailData['visitor']->email)->send(new VisitBooked($emailData)); // Send only once
+            Mail::to($visit->host->host_email)->send(new HostVisitNotification($emailData['visitor'], $visit, $visit->host));
+            Log::info('Emails sent successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error sending emails:', ['exception' => $e]);
+            return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+        }
 
         // Pass the visit data to the view
         return redirect()->route('index')->with('success', "Visit booked successfully! Your visit number is: <span style='color: red; font-weight: bold;'>$visitNumber</span> . You can share this number to let someone else join the visit.")
@@ -162,14 +160,14 @@ class VisitController extends Controller
     public function joinVisit(Request $request)
     {
         $request->validate([
-            'visitor_name' => 'required|string|max:255',
-            'visitor_last_name' => 'required|string|max:255',
+            'visit_number' => 'required|string',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'organization' => 'required|string|max:255',
-            'visitor_email' => 'required|email',
-            'visitor_number' => 'required|string|max:15',
+            'email' => 'required|email',
+            'phone_number' => 'required|string|max:15',
             'id_number' => 'required|string|max:20',
-            'visit_number' => 'required|string',
         ]);
 
         // Find the visit by visit number
@@ -184,15 +182,14 @@ class VisitController extends Controller
         }
 
         // Create new visitor for this specific visit
-        $joiningVisitor = new Visitor([
-            'visitor_name' => $request->visitor_name,
-            'visitor_last_name' => $request->visitor_last_name,
+        $joiningVisitor = Visitor::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'designation' => $request->designation,
             'organization' => $request->organization,
-            'visitor_email' => $request->visitor_email,
-            'visitor_number' => $request->visitor_number,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
             'id_number' => $request->id_number,
-            'visit_number' => $visit->visit_number,
         ]);
 
         // Save the visitor
@@ -205,20 +202,22 @@ class VisitController extends Controller
         }
 
         // Associate visitor with visit
-        $visit->visitors()->save($joiningVisitor);
+        $visit->visitors()->attach($joiningVisitor->id);
 
         // Update visit status to 'joined'
         $visit->update(['status' => 'joined']);
 
-        // Get the original visitor's email
-        $originalVisitorEmail = $visit->visitor->visitor_email;
-
         // Send email notifications
-        Mail::to($joiningVisitor->visitor_email)->send(new VisitorJoined($joiningVisitor, $visit, true));
-        Mail::to($originalVisitorEmail)->send(new VisitorJoined($joiningVisitor, $visit, false));
-
-        // Send the joined visit notification to the host
-        Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
+        try {
+            Log::info('Sending email');
+            Mail::to($joiningVisitor->email)->send(new VisitorJoined($joiningVisitor, $visit, true));
+            Mail::to($visit->visitor->email)->send(new VisitorJoined($joiningVisitor, $visit, false));
+            Mail::to($visit->host->host_email)->send(new HostVisitNotification($joiningVisitor, $visit, $visit->host));
+            Log::info('Emails sent successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error sending emails:', ['exception' => $e]);
+            return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+        }
 
         // Return success response
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
@@ -288,7 +287,6 @@ class VisitController extends Controller
                 }
             }
 
-
             try {
                 // Log before redirect
                 Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
@@ -310,6 +308,7 @@ class VisitController extends Controller
                 ->with('error', 'An error occurred during check-in. Please try again.');
         }
     }
+
     public function showVisitStatus(Request $request)
     {
         $request->validate([

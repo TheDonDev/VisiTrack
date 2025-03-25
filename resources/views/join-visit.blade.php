@@ -90,11 +90,11 @@
                                 <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                             @enderror
                         </div>
-                        <input type="text" name="visitor_name" placeholder="First Name" class="border p-2 rounded w-full" required>
-                        <input type="text" name="visitor_last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
+                        <input type="text" name="first_name" placeholder="First Name" class="border p-2 rounded w-full" required>
+                        <input type="text" name="last_name" placeholder="Last Name" class="border p-2 rounded w-full" required>
                         <input type="text" name="designation" placeholder="Designation" class="border p-2 rounded w-full" required>
-                        <input type="email" name="visitor_email" placeholder="Email" class="border p-2 rounded w-full" required>
-                        <input type="text" name="visitor_number" placeholder="Phone" class="border p-2 rounded w-full" required>
+                        <input type="email" name="email" placeholder="Email" class="border p-2 rounded w-full" required>
+                        <input type="text" name="phone_number" placeholder="Phone" class="border p-2 rounded w-full" required>
                         <input type="text" name="id_number" placeholder="ID Number" class="border p-2 rounded w-full" required>
                         <input type="text" name="organization" placeholder="Organization" class="border p-2 rounded w-full" required>
                     </div>
