@@ -9,24 +9,19 @@ use Illuminate\Support\Str;
 class Visit extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'designation',
-        'organization',
-        'email',
-        'visit_number',
-        'id_number',
-        'visit_type',
-        'visit_facility',
-        'visit_date',
-        'visit_from',
-        'visit_to',
-        'visitor_id',
-        'purpose_of_visit',
-        'host_id',
-        'check_in_time',
-    ];
+protected $fillable = [
+    'visit_number', // Ensure visit_number is unique
+    'visitor_id',
+    'host_id',
+    'visit_type',
+    'visit_facility',
+    'visit_date',
+    'visit_from',
+    'visit_to',
+    'purpose_of_visit',
+    'check_in_time',
+];
+
 
     protected $casts = [
         'visit_date' => 'date',

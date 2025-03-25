@@ -9,20 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up(): void
-{
+    public function up(): void
+    {
         Schema::create('visits', function (Blueprint $table) {
-            $table->id();
-            $table->string('visit_number')->unique();
+            $table->id(); // Auto-incrementing primary key
+            $table->string('visit_number')->unique(); // Ensure visit_number is unique
             $table->foreignId('visitor_id')->constrained('visitors');
             $table->foreignId('host_id')->constrained('hosts');
-            $table->enum('visit_type', ['Business', 'Official', 'Educational', 'Social', 'Tour', 'Other']);
-            $table->enum('visit_facility', ['Library', 'Administration Block', 'Science Block', 'Auditorium', 'SHS']);
+            $table->string('visit_type');
+            $table->string('visit_facility');
             $table->date('visit_date');
             $table->time('visit_from');
             $table->time('visit_to');
-            $table->text('purpose_of_visit');
-            $table->timestamp('check_in_time')->nullable();
+            $table->string('purpose_of_visit');
             $table->timestamps();
         });
     }

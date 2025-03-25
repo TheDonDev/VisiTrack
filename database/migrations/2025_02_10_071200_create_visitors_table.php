@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visitors', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            $table->string('phone_number');
-            $table->string('designation')->nullable(); // Allow null for designation
-            $table->string('organization')->nullable(); // Allow null for organization
-            $table->string('id_number')->nullable(); // Allow null for ID number
-            $table->timestamps();
+Schema::create('visitors', function (Blueprint $table) {
+    $table->id(); // Auto-incrementing primary key
+    $table->string('first_name');
+    $table->string('last_name');
+    $table->string('email');
+    $table->string('phone_number');
+    $table->string('designation')->nullable();
+    $table->string('organization')->nullable();
+    $table->string('id_number')->nullable();
+    $table->timestamps();
+
         });
     }
 

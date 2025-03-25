@@ -59,6 +59,37 @@
                 </div>
             </div>
 
+            <!-- Visit Details -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-primary mb-4">Visit Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Visit Type:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->visit_type }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Visit Facility:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->visit_facility }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Visit Date:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->visit_date }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Visit From:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->visit_from }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Visit To:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->visit_to }}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary mb-2">Purpose of Visit:</h4>
+                        <p class="text-gray-700">{{ $visitRecord->purpose_of_visit }}</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Host Information -->
             <div class="mb-8">
                 <h3 class="text-xl font-bold text-primary mb-4">Host Details</h3>
@@ -104,9 +135,9 @@
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Joined</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_name }} {{ $visitor->visitor_last_name }}</td>
-                                <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_email }}</td>
-                                <td class="px-4 py-2 text-gray-700">{{ $visitor->visitor_number }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->first_name }} {{ $visitor->last_name }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->email }}</td>
+                                <td class="px-4 py-2 text-gray-700">{{ $visitor->phone_number }}</td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->designation }}</td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->organization }}</td>
                                 <td class="px-4 py-2 text-gray-700">{{ $visitor->id_number }}</td>

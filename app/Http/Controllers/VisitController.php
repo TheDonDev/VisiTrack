@@ -95,8 +95,8 @@ class VisitController extends Controller
             'host_id' => 'required|exists:hosts,id',
         ]);
 
-        // Create the visitor using Visitor::findOrCreate (or create if new)
-        $visitor = Visitor::findOrCreate([
+        // Create the visitor directly
+        $visitor = Visitor::create([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
@@ -182,7 +182,7 @@ class VisitController extends Controller
                 ->with('error', 'The visit number you entered does not exist. Please check the number and try again.');
         }
 
-        // Create new visitor for this specific visit
+        // Create new visitor for this specific visit directly
         $joiningVisitor = Visitor::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
