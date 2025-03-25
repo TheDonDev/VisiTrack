@@ -28,12 +28,41 @@
         .text-secondary {
             color: var(--secondary-color);
         }
+
+        .fixed-height-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure it takes up full viewport height */
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10; /* Ensure it's above the content */
+        }
+
+        .scrollable-content {
+            flex-grow: 1; /* Allow content to grow and scroll */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-top: 4rem; /* Add padding to account for fixed header */
+            padding-bottom: 4rem; /* Add padding for the footer */
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10; /* Ensure it's above the content */
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal fixed-height-container">
 
     <!-- Header -->
-    <header class="bg-primary text-white py-4">
+    <header class="fixed-header bg-primary text-white py-4">
         <div class="container mx-auto flex items-center justify-between">
             <h1 class="text-2xl font-bold">VisiTrack</h1>
             <img src="{{ asset('images/image.png') }}" alt="Alupe University Logo" class="h-12">
@@ -41,21 +70,19 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto mt-8">
+    <main class="scrollable-content">
         <section class="bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-bold text-primary mb-6">Visit Status</h2>
 
             <!-- Visit Information -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
-            <h3 class="text-lg font-semibold text-primary mb-2">Visit Number:</h3>
-            <p class="text-gray-700">{{ $visitRecord->visit_number }}</p>
-
+                    <h3 class="text-lg font-semibold text-primary mb-2">Visit Number:</h3>
+                    <p class="text-gray-700">{{ $visitRecord->visit_number }}</p>
                 </div>
                 <div>
-            <h3 class="text-lg font-semibold text-primary mb-2">Total Visitors:</h3>
-            <p class="text-gray-700">{{ $totalVisitors ?? 0 }}</p>
-
+                    <h3 class="text-lg font-semibold text-primary mb-2">Total Visitors:</h3>
+                    <p class="text-gray-700">{{ $totalVisitors ?? 0 }}</p>
                 </div>
             </div>
 
@@ -158,7 +185,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-white py-4 mt-12">
+    <footer class="fixed-footer bg-primary text-white py-4">
         <div class="container mx-auto text-center">
             <p>&copy; 2025 Alupe University. All rights reserved.</p>
         </div>

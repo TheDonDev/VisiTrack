@@ -139,6 +139,29 @@
         .text-secondary {
             color: var(--secondary-color);
         }
+        .action-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .action-button.bg-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .action-button.bg-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .action-button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
