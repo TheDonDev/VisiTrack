@@ -14,9 +14,37 @@
             background-repeat: no-repeat;
             transition: background-image 1s ease-in-out; /* Smooth transition */
         }
+        .fixed-height-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .scrollable-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-top: 6rem; /* Adjust for header height */
+            padding-bottom: 4rem; /* Adjust for footer height */
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal fixed-height-container">
 
 <!-- Success Message Popup -->
 <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
@@ -51,7 +79,7 @@
         <form id="signup-form" action="{{ route('security.signup.submit') }}" method="POST">
             @csrf
             <div class="mb-4">
-                <input type="text" id="username" name="username" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
+                <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
                 @error('username')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -187,8 +215,12 @@
     let currentImageIndex = 0;
 
     function changeBackgroundImage() {
-        document.body.style.backgroundImage = `url(${images[currentImageIndex]})`;
-        currentImageIndex = (currentImageIndex + 1) % images.length;
+        if (images.length > 0) {
+            document.body.style.backgroundImage = `url(${images[currentImageIndex]})`;
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+        } else {
+            console.error("No images available for the background slideshow.");
+        }
     }
 
     setInterval(changeBackgroundImage, 5000); // Change image every 5 seconds
@@ -196,16 +228,18 @@
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-<!-- Header -->
-<header class="bg-primary text-white py-4">
+<!-- Header (Fixed) -->
+<header class="fixed-header bg-primary text-white py-4">
+
     <div class="container mx-auto flex items-center justify-between">
         <h1 class="text-2xl font-bold">VisiTrack</h1>
         <img src="{{ asset('images/image.png') }}" alt="Alupe University Logo" class="h-12">
     </div>
 </header>
 
-<!-- Main Content -->
-<main class="container mx-auto mt-8">
+<!-- Main Content (Scrollable) -->
+<main class="scrollable-content">
+
     <!-- Homepage Overview -->
     <section class="text-center mb-12">
         <h2 class="text-3xl font-bold text-primary">Welcome to VisiTrack</h2>
@@ -238,8 +272,9 @@
     </section>
 </main>
 
-<!-- Footer -->
-<footer class="bg-primary text-white py-4 mt-12">
+<!-- Footer (Fixed) -->
+<footer class="fixed-footer bg-primary text-white py-4">
+
     <div class="container mx-auto text-center">
         <p>&copy; 2025 Alupe University. All rights reserved.</p>
     </div>
@@ -273,5 +308,4 @@
         }
     }
 </script>
-</body>
 </html>

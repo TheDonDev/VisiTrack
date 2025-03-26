@@ -29,7 +29,7 @@ protected $fillable = [
 
     public static function generateVisitNumber()
     {
-        return rand(100000, 999999);
+        return rand(1000000000, 9999999999);
     }
 
     // Define relationships

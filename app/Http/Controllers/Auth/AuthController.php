@@ -31,13 +31,13 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|unique:users,username',
+            'name' => 'required|string|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
         ]);
 
         $user = User::create([
-            'username' => $request->username,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
