@@ -95,6 +95,7 @@
         <h2 class="text-xl font-bold text-primary">Sign Up</h2>
         <form id="signup-form" action="{{ route('security.signup.submit') }}" method="POST">
             @csrf
+            {{-- Ensure the route accepts POST requests and CSRF token is included --}}
             <div class="mb-4">
                 <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Username" required>
                 @error('username')
@@ -319,10 +320,27 @@
 <div id="feedback-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <h2 class="text-xl font-bold text-primary">Submit Feedback</h2>
-        {{-- <form id="feedback-form" action="{{ route('feedback.submit') }}" method="POST"> --}}
+        <form id="feedback-form" action="{{ route('feedback.submit') }}" method="POST">
             @csrf
             <div class="mb-4">
-                <textarea id="feedback-text" name="feedback" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter your feedback here..." rows="5" required></textarea>
+                <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Your Name" required>
+            </div>
+            <div class="mb-4">
+                <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Your Email" required>
+            </div>
+            <div class="mb-4">
+                <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5 stars):</label>
+                <select name="rating" id="rating" class="w-full px-3 py-2 border rounded-lg" required>
+                    <option value="">Select Rating</option>
+                    <option value="1">1 star</option>
+                    <option value="2">2 stars</option>
+                    <option value="3">3 stars</option>
+                    <option value="4">4 stars</option>
+                    <option value="5">5 stars</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <textarea name="feedback" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter your feedback here..." rows="5" required></textarea>
             </div>
             <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
             <button type="button" onclick="document.getElementById('feedback-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>

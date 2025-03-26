@@ -45,7 +45,7 @@ Route::get('/visit-status', [VisitController::class, 'showVisitStatus'])->name('
 
 Auth::routes(['verify' => true]); // Enable email verification routes
 
-// Security routes
+Route::post('/feedback', [VisitController::class, 'submitFeedback'])->name('feedback.submit');
 Route::get('/login', function () {
     return view('security.login');
 })->name('security.login');

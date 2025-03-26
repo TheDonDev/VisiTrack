@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Visitor;
 use App\Models\Host;
-use App\Models\Feedback;
 use App\Models\Visit;
 use App\Models\User;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -224,22 +224,29 @@ class VisitController extends Controller
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
     }
 
-    public function submitFeedback(Request $request)
-    {
-        // Validate feedback data
+        public function submitFeedback(Request $request)
+{
         $request->validate([
-            'visitor_id' => 'required|exists:visitors,id',
-            'feedback' => 'required|string',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'feedback' => 'required|string',
+        'rating' => 'required|integer|min:1|max:5'
         ]);
 
-        // Save feedback
+        try {
         Feedback::create([
-            'visitor_id' => $request->visitor_id,
+            'name' => $request->name,
+            'email' => $request->email,
             'feedback' => $request->feedback,
+            'rating' => $request->rating
         ]);
-
         return redirect()->route('index')->with('success', 'Feedback submitted successfully!');
+        } catch (\Exception $e) {
+        Log::error('Error saving feedback: ' . $e->getMessage());
+        return redirect()->route('index')->with('error', 'An error occurred while submitting your feedback. Please try again later.');
+        }
     }
+
 
     public function notifyHost(Request $request)
     {
