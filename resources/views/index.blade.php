@@ -42,6 +42,23 @@
             width: 100%;
             z-index: 10;
         }
+        /* New styles for list centering */
+        .centered-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            list-style-position: inside; /* Center the bullets */
+            padding-left: 0; /* Remove default padding */
+        }
+
+        .centered-list li {
+            text-align: center; /* Center the text within list items */
+            margin-bottom: 0.5rem; /* Add some spacing between list items */
+        }
+        .centered-list li::marker {
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal fixed-height-container">
@@ -260,17 +277,121 @@
         <button onclick="document.getElementById('visit-number-modal').classList.remove('hidden')" class="bg-secondary text-white px-6 py-3 rounded">Check Status</button>
     </section>
 
-    <!-- Instructions Section -->
-    <section class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-2xl font-bold text-primary mb-4">How it  <span style='color:  #ffcc00; font-weight: bold;'>Works</span></h3>
-        <p class="mb-4">Follow these steps to book a visit, join a booked visit, and check-in:</p>
-        <ul class="list-disc pl-5 mb-4">
-            <li>Book a visit through the "Book a Visit" button.</li>
-            <li>Join a booked visit using the "Join a Visit" button.</li>
-            <li>Check-in on the day of your visit using the "Check-In" button.</li>
+<!-- Instructions Section -->
+<section class="bg-white shadow-lg rounded-lg p-6">
+    <h3 class="text-2xl font-bold text-primary mb-4 text-center">How it <span style='color: #ffcc00; font-weight: bold;'>Works</span></h3>
+    <div class="text-center overflow-hidden">
+        <p class="mb-4 sliding-text">Follow these steps to book a visit, join a booked visit, Check your Visit Status and check-in:</p>
+        <ul class="mb-4 horizontal-list">
+            <li class="sliding-text">
+                <div class="instruction-item">
+                    <span class="font-bold">Book a Visit</span><br>
+                    <p>Book a visit through the "Book a Visit" button to generate your visit number.</p>
+                </div>
+            </li>
+            <li class="sliding-text">
+                <div class="instruction-item">
+                    <span class="font-bold">Join a Visit</span><br>
+                    <p>Join a booked visit using the "Join a Visit" button.</p>
+                </div>
+            </li>
+            <li class="sliding-text">
+                <div class="instruction-item">
+                    <span class="font-bold">Check-In</span><br>
+                    <p>Check-in on the day of your visit using the "Check-In" button.</p>
+                </div>
+            </li>
+            <li class="sliding-text">
+                <div class="instruction-item">
+                    <span class="font-bold">Check Status</span><br>
+                    <p>Check your visit status using the "Check Status" button.</p>
+                </div>
+            </li>
         </ul>
-        <p>For any feedback, please use the "Submit Feedback" button below.</p>
-    </section>
+    <div class="flex flex-col items-center">
+            <p class="sliding-text mb-4">For any feedback, please use the button below.</p>
+            <button onclick="document.getElementById('feedback-modal').classList.remove('hidden')" class="sliding-text bg-secondary text-white px-6 py-3 rounded">Submit Feedback</button>
+        </div>
+    </div>
+</section>
+
+<!-- Feedback Modal -->
+<div id="feedback-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <h2 class="text-xl font-bold text-primary">Submit Feedback</h2>
+        {{-- <form id="feedback-form" action="{{ route('feedback.submit') }}" method="POST"> --}}
+            @csrf
+            <div class="mb-4">
+                <textarea id="feedback-text" name="feedback" class="w-full px-3 py-2 border rounded-lg" placeholder="Enter your feedback here..." rows="5" required></textarea>
+            </div>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
+            <button type="button" onclick="document.getElementById('feedback-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+        </form>
+    </div>
+</div>
+</div>
+</section>
+
+<style>
+    .horizontal-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+    }
+
+    .horizontal-list li {
+        margin: 10px;
+        text-align: center;
+        flex: 1 0 200px;
+        max-width: 300px;
+    }
+    .instruction-item{
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .sliding-text {
+        opacity: 0;
+        transform: translateX(-100%);
+        animation: slideIn 1s ease-out forwards;
+        margin-bottom: 0.5rem;
+    }
+
+    .sliding-text:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+
+    .sliding-text:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    .sliding-text:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+    .sliding-text:nth-child(4) {
+        animation-delay: 0.8s;
+    }
+    .sliding-text:nth-child(5) {
+        animation-delay: 1s;
+    }
+    .sliding-text:nth-child(6) {
+        animation-delay: 1.2s;
+    }
+
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>
 </main>
 
 <!-- Footer (Fixed) -->
