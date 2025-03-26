@@ -108,7 +108,8 @@
 
         <script>
             document.getElementById('signup-form').addEventListener('submit', function(event) {
-                const username = document.getElementById('username').value.trim();
+                const username = document.getElementById('name').value.trim();
+
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('signup-password').value.trim();
                 const confirmPassword = document.getElementById('signup-password-confirm').value.trim();

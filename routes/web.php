@@ -7,6 +7,7 @@ use App\Http\Controllers\VisitController;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 // Test email route
 Route::get('/send-test-email', function () {
@@ -41,6 +42,8 @@ Route::post('/check-in', [VisitController::class, 'processCheckIn'])->name('visi
 Route::get('/visit-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
 
 Route::post('/submit-feedback', [VisitController::class, 'submitFeedback'])->name('visits.feedback.submit');
+
+Auth::routes(['verify' => true]); // Enable email verification routes
 
 // Security routes
 Route::get('/login', function () {

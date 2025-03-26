@@ -28,20 +28,24 @@ class AuthController extends Controller
         }
     }
 
-    public function signup(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|unique:users,name',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
-        ]);
+public function signup(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|unique:users,name',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
 
-        return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
-    }
+    // Send email verification notification
+    $user->sendEmailVerificationNotification();
+
+    return redirect()->route('login')->with('success', 'Registration successful. Please check your email for verification.');
+}
+
 }
