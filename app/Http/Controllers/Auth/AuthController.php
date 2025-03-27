@@ -45,7 +45,7 @@ public function signup(Request $request)
     // Send email verification notification
     $user->sendEmailVerificationNotification();
 
-    return redirect()->route('login')->with('success', 'Registration successful. Please check your email for verification.');
+    return redirect()->route('index')->with('success', 'Registration successful. Please check your email for verification.');
 }
 
 }

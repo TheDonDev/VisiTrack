@@ -37,6 +37,16 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array<string, string>
      */
+    public function hasVerifiedEmail(): bool
+    {
+        return !is_null($this->email_verified_at);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmail);
+    }
+
     protected function casts(): array
     {
         return [

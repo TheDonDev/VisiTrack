@@ -226,6 +226,7 @@ class VisitController extends Controller
 
         public function submitFeedback(Request $request)
 {
+    Log::info('Feedback Request Data:', $request->all());
         $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|max:255',
