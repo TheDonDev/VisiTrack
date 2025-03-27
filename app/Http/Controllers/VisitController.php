@@ -145,7 +145,7 @@ class VisitController extends Controller
 
         // Send email notifications
         try {
-            Mail::to($emailData['visitor']->email)->send(new VisitBooked($emailData)); // Send only once
+            Mail::to($emailData['visitor']->email)->send(new VisitBooked($emailData));
             Mail::to($visit->host->host_email)->send(new HostVisitNotification($emailData['visitor'], $visit, $visit->host));
             Log::info('Emails sent successfully.');
         } catch (\Exception $e) {
@@ -230,16 +230,18 @@ class VisitController extends Controller
         $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|max:255',
+        'rating' => 'required|integer|min:1|max:5',
         'feedback' => 'required|string',
-        'rating' => 'required|integer|min:1|max:5'
+
         ]);
 
         try {
         Feedback::create([
             'name' => $request->name,
             'email' => $request->email,
+            'rating' => $request->rating,
             'feedback' => $request->feedback,
-            'rating' => $request->rating
+
         ]);
         return redirect()->route('index')->with('success', 'Feedback submitted successfully!');
         } catch (\Exception $e) {

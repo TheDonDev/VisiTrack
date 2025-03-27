@@ -107,12 +107,12 @@
                 <section class="bg-white shadow-lg rounded-lg p-6 mb-8">
                     <h3 class="text-2xl font-bold text-primary mb-4 text-center">How it <span style='color: #ffcc00; font-weight: bold;'>Works</span></h3>
                     <div class="text-center overflow-hidden">
-                        <p class="mb-4 sliding-text">Follow these steps to book a visit, join a booked visit, Check your Visit Status and check-in:</p>
+                        <p class="mb-4 sliding-text">Follow these steps to book a visit, join a booked visit, check your visit status and check-in:</p>
                         <ul class="mb-4 horizontal-list">
                             <li class="sliding-text">
                                 <div class="instruction-item">
                                     <span class="font-bold">Book a Visit</span><br>
-                                    <p>Book a visit through the "Book a Visit" button to generate a Visit Number</p>
+                                    <p>Book a visit through the "Book a Visit" button to generate a Visit Number.</p>
                                 </div>
                             </li>
                             <li class="sliding-text">
@@ -124,13 +124,13 @@
                             <li class="sliding-text">
                                 <div class="instruction-item">
                                     <span class="font-bold">Check-In</span><br>
-                                    <p>Check-in on the day of your visit using the "Check-In" button. Provide your Visit Number</p>
+                                    <p>Check-in on the day of your visit using the "Check-In" button. Provide your Visit Number.</p>
                                 </div>
                             </li>
                             <li class="sliding-text">
                                 <div class="instruction-item">
                                     <span class="font-bold">Check Status</span><br>
-                                    <p>Check your visit status using the "Check Status" button. Input your Visit Number</p>
+                                    <p>Check your visit status using the "Check Status" button. Input your Visit Number.</p>
                                 </div>
                             </li>
                         </ul>
