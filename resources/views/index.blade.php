@@ -79,9 +79,14 @@
 
                 <!-- Success Message Display -->
                 @if(session('success'))
-                    <div class="alert alert-success bg-green-500 text-white p-4 rounded mb-4">
-                        {{ session('success') }}
+                    <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <h2 class="text-xl font-bold text-primary">Success</h2>
+                            <p id="success-text">{!! session('success') !!}</p>
+                            <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+                        </div>
                     </div>
+
                 @endif
 
                 <!-- Homepage Overview -->
