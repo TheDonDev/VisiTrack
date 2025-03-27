@@ -8,6 +8,7 @@ use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\FeedController;
 
 // Test email route
@@ -42,8 +43,12 @@ Route::post('/check-in', [VisitController::class, 'processCheckIn'])->name('visi
 
 Route::get('/visit-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
 
-
 Auth::routes(['verify' => true]); // Enable email verification routes
+
+// Adding the verification route
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
 
 Route::post('/feedback', [VisitController::class, 'submitFeedback'])->name('feedback.submit');
 Route::get('/login', function () {
