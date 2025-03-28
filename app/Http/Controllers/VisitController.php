@@ -57,7 +57,7 @@ class VisitController extends Controller
         ]);
 
         if (\Illuminate\Support\Facades\Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('visits.check-in')->with('success', 'Login successful!');
+            return redirect()->route('index')->with('success', 'Login successful!')->with('showVisitModal', true);
         }
 
         return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
@@ -322,6 +322,8 @@ class VisitController extends Controller
 
     public function showVisitStatus(Request $request)
     {
+        // Logic to handle visit status
+    {
         $request->validate([
             'visit' => 'required|string|exists:visits,visit_number',
         ]);
@@ -338,4 +340,5 @@ class VisitController extends Controller
 
         return view('visit-status', compact('visitRecord', 'totalVisitors', 'visitors'));
     }
+}
 }

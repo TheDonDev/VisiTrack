@@ -191,8 +191,33 @@
                         <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
                         <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
                         <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+
+                <!-- New Visit Status Modal -->
+                <div id="visit-status-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
+                        <form id="visit-status-form" method="GET" action="{{ route('visits.status') }}">
+                            <div class="mb-4">
+                                <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                            </div>
+                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Check-In</button>
+                            <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-2">Check-Out</button>
+                            <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded mt-2" onclick="document.getElementById('visit-status-modal').classList.add('hidden')">Log-Out</button>
+                        </form>
                     </div>
                 </div>
+
+                <script>
+                    window.onload = function() {
+                        @if(session('showVisitModal'))
+                            document.getElementById('visit-status-modal').classList.remove('hidden');
+                        @endif
+                    };
+                </script>
+
+                    </div>
+                </div>
+
 
                 <!-- Sign-Up Modal -->
                 <div id="signup-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
@@ -252,7 +277,9 @@
                 <div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-xl font-bold text-primary">Log In</h2>
-                        <form action="{{ route('security.login') }}" method="POST">
+<form onsubmit="handleLogin(event)" action="{{ route('security.login') }}" method="POST">
+
+
                             @csrf
                             <div class="mb-4">
                                 <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
@@ -292,14 +319,47 @@
 
     </div>
 
-    <script>
-        // Check if there's a success message in the session
-        window.onload = function() {
-            @if(session('success'))
-                document.getElementById('success-message').classList.remove('hidden');
-                document.getElementById('success-text').innerHTML = "{!! session('success') !!}";
-            @endif
-        };
+                <script>
+function handleLogin(event) {
+
+    // Hide the main content
+    document.querySelector('.fixed-height-container').classList.add('hidden');
+
+                        event.preventDefault(); // Prevent the default form submission
+                        const form = event.target;
+
+                        // Perform the login via AJAX or any other method
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Hide the login modal
+                                document.getElementById('auth-modal').classList.add('hidden');
+                                // Show the visit number modal on successful login
+                                document.getElementById('visit-status-modal').classList.remove('hidden');
+
+                            } else {
+                                // Handle login error
+                                alert('Login failed. Please try again.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+
+                    window.onload = function() {
+                        @if(session('showVisitModal'))
+                            document.getElementById('visit-status-modal').classList.remove('hidden');
+                        @endif
+                    };
+
         function showCheckInModal() {
             document.getElementById('checkin-modal').classList.remove('hidden');
         }
