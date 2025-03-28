@@ -20,6 +20,31 @@ use App\Mail\HostVisitorCheckedIn;
 
 class VisitController extends Controller
 {
+    public function checkIn(Request $request)
+    {
+        $request->validate([
+            'visit' => 'required|string',
+        ]);
+
+        // Retrieve the visit number from the request
+        $visitNumber = $request->input('visit');
+
+        // Find the visit and associated visitor and host
+        $visit = Visit::where('visit_number', $visitNumber)->first();
+
+        if (!$visit) {
+            return redirect()->back()->with('error', 'Visit not found.');
+        }
+
+        $visitor = Visitor::find($visit->visitor_id);
+        $host = Host::find($visit->host_id);
+
+        // Send email notification to the host
+        Mail::to($host->email)->send(new VisitorCheckedIn($visitor, $visit));
+
+        // Redirect to the visit status page
+        return redirect()->route('visits.status')->with('success', 'Check-in successful. Email notification sent to the host.');
+    }
     public function showLoginForm()
     {
         return view('security.login');

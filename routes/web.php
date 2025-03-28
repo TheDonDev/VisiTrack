@@ -22,7 +22,7 @@ Route::get('/send-test-email', function () {
     }
 });
 
-// Main routes
+Route::post('/check-in', [VisitController::class, 'checkIn'])->name('visits.check-in.submit');
 Route::get('/', function () {
     $visitNumber = session('visit_number', null);
     return view('index', compact('visitNumber'));

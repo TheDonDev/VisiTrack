@@ -79,18 +79,16 @@
 
                 <!-- Success Message Display -->
                 @if(session('success'))
-                    <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+                    <div id="success-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
                         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                             <h2 class="text-xl font-bold text-primary">Success</h2>
                             <p id="success-text">{!! session('success') !!}</p>
                             <button onclick="document.getElementById('success-message').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
                         </div>
                     </div>
-
                 @endif
 
                 <!-- Homepage Overview -->
-
                 <section class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-primary">Welcome to VisiTrack</h2>
                     <p class="mt-4 text-white">An efficient digital visitor management system for Alupe University.</p>
@@ -146,7 +144,6 @@
                     </div>
                 </section>
 
-
                 <!-- Feedback Modal -->
                 <div id="feedback-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -196,11 +193,11 @@
                 <div id="visit-status-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-                        <form id="visit-status-form" method="GET" action="{{ route('visits.status') }}">
+                        <form id="visit-status-form" method="POST" action="{{ route('visits.check-in') }}">
                             <div class="mb-4">
                                 <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
                             </div>
-                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Check-In</button>
+                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
                             <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-2">Check-Out</button>
                             <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded mt-2" onclick="document.getElementById('visit-status-modal').classList.add('hidden')">Log-Out</button>
                         </form>
@@ -278,8 +275,6 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-xl font-bold text-primary">Log In</h2>
 <form onsubmit="handleLogin(event)" action="{{ route('security.login') }}" method="POST">
-
-
                             @csrf
                             <div class="mb-4">
                                 <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
@@ -288,7 +283,7 @@
                                 <input type="password" id="login-password" name="password" class="w-full px-3 py-2 border rounded-lg" placeholder="Password" required>
                             </div>
                             <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
-                            <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+                            <button type="button" onclick="document.getElementById('auth-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
                         </form>
                     </div>
                 </div>
@@ -297,7 +292,7 @@
                 <div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-                        <form id="visit-status-form" method="GET" action="{{ route('visits.status') }}">
+                        <form id="visit-status-form" method="POST" action="{{ route('visits.check-in') }}">
                             <div class="mb-4">
                                 <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
                             </div>
