@@ -11,16 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\FeedController;
 
-// Test email route
-Route::get('/send-test-email', function () {
-    try {
-        Mail::to('donaldmwanga33@gmail.com')->send(new TestMail());
-        return 'Test email sent!';
-    } catch (\Exception $e) {
-        Log::error('Error sending test email: ' . $e->getMessage());
-        return 'Failed to send test email.';
-    }
-});
 
 Route::post('/check-in', [VisitController::class, 'checkIn'])->name('visits.check-in.submit');
 Route::get('/', function () {
@@ -28,20 +18,16 @@ Route::get('/', function () {
     return view('index', compact('visitNumber'));
 })->name('index');
 
+// Book Visit Routes
 Route::get('/book-visit', [VisitController::class, 'showBookVisitForm'])->name('book.visit');
+Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.visit.submit');
 
+// Join Visit Routes
 Route::get('/join-visit', function () {
     return view('join-visit');
 })->name('join.visit');
-
 Route::post('/join-visit', [VisitController::class, 'joinVisit'])->name('join.visit.submit');
 
-Route::post('/book-visit', [VisitController::class, 'bookVisit'])->name('book.visit.submit');
-
-Route::get('/check-in', [VisitController::class, 'showCheckInForm'])->name('visits.check-in');
-Route::post('/check-in', [VisitController::class, 'processCheckIn'])->name('visits.check-in.submit');
-
-Route::get('/visit-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
 
 Auth::routes(['verify' => true]); // Enable email verification routes
 
@@ -57,7 +43,11 @@ Route::get('/login', function () {
 
 Route::get('/signup', function () {
     return view('security.signup');
-})->name('security.signup');
+})->name('security.signup.submit');
 
-Route::post('/login', [AuthController::class, 'login'])->name('security.login.submit');
+Route::post('/login', [AuthController::class, 'login'])->name('security.login');
 Route::post('/signup', [AuthController::class, 'signup'])->name('security.signup.submit');
+
+// Visit Status Routes
+Route::post('/check-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
+Route::post('/process-check-in', [VisitController::class, 'processCheckIn'])->name('visits.process-check-in');

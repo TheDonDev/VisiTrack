@@ -87,6 +87,28 @@
                         </div>
                     </div>
                 @endif
+                @if(session('error'))
+                    <div id="error-message" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <h2 class="text-xl font-bold text-red-500">Error</h2>
+                            <p id="error-text">{{ session('error') }}</p>
+                            <button onclick="document.getElementById('error-message').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+                        </div>
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div id="validation-errors" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <h2 class="text-xl font-bold text-red-500">Validation Errors</h2>
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button onclick="document.getElementById('validation-errors').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- Homepage Overview -->
                 <section class="text-center mb-12">
@@ -192,10 +214,11 @@
                 <!-- New Visit Status Modal -->
                 <div id="visit-status-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-                        <form id="visit-status-form" method="POST" action="{{ route('visits.check-in') }}">
+                        <h2 class="text-xl font-bold text-primary">Enter Visit Number to Check-In</h2>
+                        <form id="check-in-form" method="POST" action="{{ route('visits.process-check-in') }}">
+                            @csrf
                             <div class="mb-4">
-                                <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                                <input type="text" name="visit_number" id="visit-number-checkin" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
                             </div>
                             <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
                             <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-2">Check-Out</button>
@@ -274,7 +297,7 @@
                 <div id="auth-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-xl font-bold text-primary">Log In</h2>
-<form onsubmit="handleLogin(event)" action="{{ route('security.login') }}" method="POST">
+                        <form onsubmit="handleLogin(event)" action="{{ route('security.login') }}" method="POST">
                             @csrf
                             <div class="mb-4">
                                 <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" placeholder="Email" required>
@@ -291,10 +314,11 @@
                 <!-- Visit Number Modal -->
                 <div id="visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h2 class="text-xl font-bold text-primary">Enter Visit Number</h2>
-                        <form id="visit-status-form" method="POST" action="{{ route('visits.check-in') }}">
+                        <h2 class="text-xl font-bold text-primary">Enter Visit Number to Check Status</h2>
+                        <form id="check-status-form" method="POST" action="{{ route('visits.status') }}">
+                            @csrf
                             <div class="mb-4">
-                                <input type="text" name="visit" id="visit-number" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                                <input type="text" name="visit" id="visit-number-status" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
                             </div>
                             <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
                             <button type="button" onclick="document.getElementById('visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
@@ -316,38 +340,39 @@
 
                 <script>
 function handleLogin(event) {
+    event.preventDefault(); // Prevent the default form submission
+    const form = event.target;
 
-    // Hide the main content
-    document.querySelector('.fixed-height-container').classList.add('hidden');
-
-                        event.preventDefault(); // Prevent the default form submission
-                        const form = event.target;
-
-                        // Perform the login via AJAX or any other method
-                        fetch(form.action, {
-                            method: 'POST',
-                            body: new FormData(form),
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                // Hide the login modal
-                                document.getElementById('auth-modal').classList.add('hidden');
-                                // Show the visit number modal on successful login
-                                document.getElementById('visit-status-modal').classList.remove('hidden');
-
-                            } else {
-                                // Handle login error
-                                alert('Login failed. Please try again.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                    }
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Crucial line added here
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Hide the login modal
+            document.getElementById('auth-modal').classList.add('hidden');
+            // Show the visit number modal on successful login
+            document.getElementById('visit-status-modal').classList.remove('hidden');
+            // Optionally, you can redirect or refresh the page here
+            // window.location.href = "{{ route('index') }}"; // Example redirect
+        } else {
+            // Handle login error -  check response.status and response.text() for more details
+            response.text().then(text => {
+                alert(`Login failed: ${text}`);
+                // Optionally, you can display the error in a specific div
+                // document.getElementById('login-error').textContent = `Login failed: ${text}`;
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An unexpected error occurred during login.');
+    });
+}
 
                     window.onload = function() {
                         @if(session('showVisitModal'))
