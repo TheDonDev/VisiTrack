@@ -10,17 +10,16 @@ use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use App\Mail\VisitBooked;
 use App\Mail\VisitorJoined;
 use App\Mail\HostVisitNotification;
-use App\Mail\HostVisitJoined; // Import the new mailable
+use App\Mail\HostVisitJoined;
 use App\Mail\VisitorCheckedIn;
 use App\Mail\HostVisitorCheckedIn;
 
 class VisitController extends Controller
 {
-    public function checkIn(Request $request)
+    public function processCheckIn(Request $request)
     {
         $request->validate([
             'visit' => 'required|string',
@@ -37,22 +36,31 @@ class VisitController extends Controller
         }
 
         $visitor = Visitor::find($visit->visitor_id);
-        // Retrieve the host details
-        // Retrieve the host details
-        // Retrieve the host details
         $host = Host::find($visit->host_id);
 
-        // Send email notification to the host
-        Mail::to($host->email)->send(new HostVisitorCheckedIn($visitor, $visit));
-        Mail::to($host->email)->send(new VisitorCheckedIn($visitor, $visit));
+        if(!$visitor || !$host){
+            Log::error('Visitor or Host not found for visit', ['visit_number' => $visitNumber]);
+            return redirect()->back()->with('error', 'Visitor or Host data not found.');
+        }
 
-        // Send email notification to the visitor
-        Mail::to($visitor->email)->send(new VisitorCheckedIn($visitor, $visit));
+        // Send email notification to the host
+        try {
+            Mail::to($host->email)->send(new HostVisitorCheckedIn($visit));
+            Mail::to($host->email)->send(new VisitorCheckedIn($visit, $visitor));
+
+            // Send email notification to the visitor
+            Mail::to($visitor->email)->send(new VisitorCheckedIn($visit, $visitor));
+        } catch (\Exception $e) {
+            Log::error('Error sending check-in emails:', ['exception' => $e]);
+            return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+        }
 
         // Redirect to the visit status page
-        return redirect()->route('visits.status')
+        return redirect()->route('visits.status', ['visit' => $visitNumber])
             ->with('success', 'Check-in successful. Email notification sent to the host.');
     }
+
+
     public function showLoginForm()
     {
         return view('security.login');
@@ -77,7 +85,12 @@ class VisitController extends Controller
 
         // Send confirmation email
         $visit = Visit::where('visitor_id', $user->id)->first();
-        Mail::to($user->email)->send(new VisitorJoined($user, $visit));
+        try {
+            Mail::to($user->email)->send(new VisitorJoined($user, $visit));
+        } catch (\Exception $e) {
+            Log::error('Error sending signup email:', ['exception' => $e]);
+            return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+        }
 
         return redirect()->route('security.login')->with('success', 'Signup successful! Please log in.');
     }
@@ -169,7 +182,7 @@ class VisitController extends Controller
         // Prepare data for the email
         $emailData = [
             'visit' => $visit,
-            'visitor' => $visit->visitor,
+            'visitor' => $visitor,
             'host_name' => $visit->host->host_name,
             'host_email' => $visit->host->host_email,
             'host_number' => $visit->host->host_number,
@@ -179,7 +192,7 @@ class VisitController extends Controller
         // Send email notifications
         try {
             Mail::to($emailData['visitor']->email)->send(new VisitBooked($emailData));
-            Mail::to($visit->host->host_email)->send(new HostVisitNotification($emailData['visitor'], $visit, $visit->host));
+            Mail::to($visit->host->host_email)->send(new HostVisitNotification($visitor, $visit, $visit->host));
             Log::info('Emails sent successfully.');
         } catch (\Exception $e) {
             Log::error('Error sending emails:', ['exception' => $e]);
@@ -257,40 +270,42 @@ class VisitController extends Controller
         return redirect()->route('index')->with('success', "You have joined the visit successfully!");
     }
 
-        public function submitFeedback(Request $request)
-{
-    Log::info('Feedback Request Data:', $request->all());
+    public function submitFeedback(Request $request)
+    {
+        Log::info('Feedback Request Data:', $request->all());
         $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'rating' => 'required|integer|min:1|max:5',
-        'feedback' => 'required|string',
-
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+            'feedback' => 'required|string',
         ]);
 
         try {
-        Feedback::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'rating' => $request->rating,
-            'feedback' => $request->feedback,
-
-        ]);
-        return redirect()->route('index')->with('success', 'Feedback submitted successfully!');
+            Feedback::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'rating' => $request->rating,
+                'feedback' => $request->feedback,
+            ]);
+            return redirect()->route('index')->with('success', 'Feedback submitted successfully!');
         } catch (\Exception $e) {
-        Log::error('Error saving feedback: ' . $e->getMessage());
-        return redirect()->route('index')->with('error', 'An error occurred while submitting your feedback. Please try again later.');
+            Log::error('Error saving feedback: ' . $e->getMessage());
+            return redirect()->route('index')->with('error', 'An error occurred while submitting your feedback. Please try again later.');
         }
     }
-
 
     public function notifyHost(Request $request)
     {
         // Logic to notify the host
         $visit = Visitor::where('visit_number', $request->visit_number)->first();
         if ($visit) {
-            Mail::to($visit->host->host_email)->send(new VisitorJoined($visit, $request->visit_number));
-            return response()->json(['message' => 'Host has been notified!']);
+            try {
+                Mail::to($visit->host->host_email)->send(new VisitorJoined($visit, $request->visit_number));
+                return response()->json(['message' => 'Host has been notified!']);
+            } catch (\Exception $e) {
+                Log::error('Error sending notify host email:', ['exception' => $e]);
+                return response()->json(['message' => 'Error sending email to host.'], 500);
+            }
         }
         return response()->json(['message' => 'Visit number not found.'], 404);
     }
@@ -300,24 +315,24 @@ class VisitController extends Controller
         return view('check-in');
     }
 
-    public function processCheckIn(Request $request)
+    public function processCheckOut(Request $request)
     {
         try {
             $request->validate([
                 'visit_number' => 'required|string|exists:visits,visit_number',
             ]);
 
-            Log::info("Visit number validated successfully: " . $request->visit_number);
+            Log::info("Visit number validated successfully for checkout: " . $request->visit_number);
 
             // Find the visit
             $visit = Visit::where('visit_number', $request->visit_number)->firstOrFail();
-            Log::info("Visit found: " . $visit->id);
+            Log::info("Visit found for checkout: " . $visit->id);
 
             // Update visit status
-            $visit->update(['status' => 'checked_in']);
+            $visit->update(['status' => 'checked_out']);
 
             // Get related visitors
-            $visitors = Visitor::where('visit_number', $visit->visit_number)->get();
+            $visitors = $visit->visitors;
             $totalVisitors = $visitors->count();
 
             // Retrieve the associated visitor - first try by visitor_id, then by visit_number
@@ -344,38 +359,28 @@ class VisitController extends Controller
                     'visit' => $visit,
                     'host' => $host,
                 ];
-                $emailData = [
-                    'visitor' => $visitor,
-                    'visit' => $visit,
-                    'host' => $host,
-                ];
 
                 // Send email notification to the visitor
-                Mail::to($visitor->email)->send(new VisitorCheckedIn($visit));
+                // Mail::to($visitor->email)->send(new VisitorCheckedOut($emailData)); // Assuming you have a VisitorCheckedOut Mailable
 
-                return redirect()->route('visits.status', ['visit' => $visit->visit_number])
-                    ->with('success', 'Check-in successful!');
+                return redirect()->route('index')->with('success', 'Check-out successful!')->with('showCheckInModal', true);
             } catch (\Exception $e) {
-                Log::error("Error during check-in process: " . $e->getMessage());
-                return redirect()->back()->withErrors(['error' => 'An error occurred during check-in. Please try again.']);
+                Log::error("Error during check-out process: " . $e->getMessage());
+                return redirect()->back()->withErrors(['error' => 'An error occurred during check-out. Please try again.']);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->route('index')
                 ->withErrors($e->errors())
                 ->withInput();
         } catch (\Exception $e) {
-            Log::error("Error during check-in process: " . $e->getMessage());
+            Log::error("Error during check-out process: " . $e->getMessage());
             return redirect()->route('index')
-                ->with('error', 'An error occurred during check-in. Please try again.');
+                ->with('error', 'An error occurred during check-out. Please try again.');
         }
     }
 
     public function showVisitStatus(Request $request)
     {
-        // Logic to handle visit status
-
-        // Logic to handle visit status
-
         $request->validate([
             'visit' => 'required|string|exists:visits,visit_number',
         ]);

@@ -20,7 +20,7 @@ class AuthController extends Controller
 
         try {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect()->route('index')->with('success', 'Login successful!'); // Redirect to index after successful login
+                return redirect()->route('index')->with('success', 'Login successful!')->with('showVisitModal', true); // Redirect to show the visit number modal
             }
             throw ValidationException::withMessages(['email' => 'Invalid credentials.']); // Throw exception for better error handling
         } catch (ValidationException $e) {
@@ -28,24 +28,32 @@ class AuthController extends Controller
         }
     }
 
-public function signup(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|unique:users,name',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
-    ]);
+    public function signup(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|unique:users,name',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-    // Send email verification notification
-    $user->sendEmailVerificationNotification();
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
 
-    return redirect()->route('index')->with('success', 'Registration successful. Please check your email for verification.');
-}
+        return redirect()->route('index')->with('success', 'Registration successful. Please check your email for verification.');
+    }
 
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('index')->with('success', 'You have been logged out.');
+    }
 }

@@ -213,6 +213,23 @@
                     </div>
                 </div>
 
+                <!-- New Visit Number Modal -->
+                <div id="new-visit-number-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h2 class="text-xl font-bold text-primary">Enter the Visit Number to Check-In</h2>
+                        <form id="new-visit-number-form" method="POST" action="{{ route('visits.checkin') }}">
+                            @csrf
+                            <div class="mb-4">
+                                <input type="text" name="visit" id="visit-number-checkin" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
+                            </div>
+                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
+                            <button type="button" onclick="document.getElementById('new-visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Check-Out</button>
+                            <button type="button" onclick="document.getElementById('new-visit-number-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Log-out</button>
+                        </form>
+                    </div>
+                </div>
+
+
 
                 <!-- Sign-Up Modal -->
                 <div id="signup-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
@@ -330,8 +347,8 @@ function handleLogin(event) {
         if (response.ok) {
             // Hide the login modal
             document.getElementById('auth-modal').classList.add('hidden');
-            // Show the visit number modal on successful login
-            document.getElementById('visit-status-modal').classList.remove('hidden');
+            // Show the new visit number modal on successful login
+            document.getElementById('new-visit-number-modal').classList.remove('hidden');
             // Optionally, you can redirect or refresh the page here
             // window.location.href = "{{ route('index') }}"; // Example redirect
         } else {
