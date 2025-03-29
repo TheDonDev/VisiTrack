@@ -210,31 +210,6 @@
                         <button onclick="showAuthModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Log In</button>
                         <button onclick="document.getElementById('signup-modal').classList.remove('hidden')" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-4">Sign Up</button>
                         <button onclick="document.getElementById('checkin-modal').classList.add('hidden')" class="mt-4 bg-gray-300 text-black px-4 py-2 rounded">Close</button>
-
-                <!-- New Visit Status Modal -->
-                <div id="visit-status-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <h2 class="text-xl font-bold text-primary">Enter Visit Number to Check-In</h2>
-                        <form id="check-in-form" method="POST" action="{{ route('visits.process-check-in') }}">
-                            @csrf
-                            <div class="mb-4">
-                                <input type="text" name="visit_number" id="visit-number-checkin" class="w-full px-3 py-2 border rounded-lg" placeholder="Visit Number" required>
-                            </div>
-                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Submit</button>
-                            <button type="button" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark mt-2">Check-Out</button>
-                            <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded mt-2" onclick="document.getElementById('visit-status-modal').classList.add('hidden')">Log-Out</button>
-                        </form>
-                    </div>
-                </div>
-
-                <script>
-                    window.onload = function() {
-                        @if(session('showVisitModal'))
-                            document.getElementById('visit-status-modal').classList.remove('hidden');
-                        @endif
-                    };
-                </script>
-
                     </div>
                 </div>
 

@@ -37,13 +37,21 @@ class VisitController extends Controller
         }
 
         $visitor = Visitor::find($visit->visitor_id);
+        // Retrieve the host details
+        // Retrieve the host details
+        // Retrieve the host details
         $host = Host::find($visit->host_id);
 
         // Send email notification to the host
+        Mail::to($host->email)->send(new HostVisitorCheckedIn($visitor, $visit));
         Mail::to($host->email)->send(new VisitorCheckedIn($visitor, $visit));
 
+        // Send email notification to the visitor
+        Mail::to($visitor->email)->send(new VisitorCheckedIn($visitor, $visit));
+
         // Redirect to the visit status page
-        return redirect()->route('visits.status')->with('success', 'Check-in successful. Email notification sent to the host.');
+        return redirect()->route('visits.status')
+            ->with('success', 'Check-in successful. Email notification sent to the host.');
     }
     public function showLoginForm()
     {
@@ -327,7 +335,24 @@ class VisitController extends Controller
                 // Log before redirect
                 Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
 
-                // Redirect to visit status page
+                // Retrieve the host details
+                $host = Host::find($visit->host_id);
+
+                // Prepare data for the email
+                $emailData = [
+                    'visitor' => $visitor,
+                    'visit' => $visit,
+                    'host' => $host,
+                ];
+                $emailData = [
+                    'visitor' => $visitor,
+                    'visit' => $visit,
+                    'host' => $host,
+                ];
+
+                // Send email notification to the visitor
+                Mail::to($visitor->email)->send(new VisitorCheckedIn($visit));
+
                 return redirect()->route('visits.status', ['visit' => $visit->visit_number])
                     ->with('success', 'Check-in successful!');
             } catch (\Exception $e) {
@@ -348,7 +373,9 @@ class VisitController extends Controller
     public function showVisitStatus(Request $request)
     {
         // Logic to handle visit status
-    {
+
+        // Logic to handle visit status
+
         $request->validate([
             'visit' => 'required|string|exists:visits,visit_number',
         ]);
@@ -365,5 +392,4 @@ class VisitController extends Controller
 
         return view('visit-status', compact('visitRecord', 'totalVisitors', 'visitors'));
     }
-}
 }
