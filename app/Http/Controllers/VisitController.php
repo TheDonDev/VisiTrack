@@ -57,7 +57,7 @@ class VisitController extends Controller
             Mail::to($visitor->email)->send(new VisitorCheckedIn($visit, $visitor));
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Check-in successful! Welcome, ' . $visitor->first_name . '.');
+            return redirect()->route('index')->with('success', 'Check-in successful! Welcome, ' . $visitor->first_name . '.');
         } catch (\Exception $e) {
             Log::error('Error sending check-in emails:', ['exception' => $e]);
             return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
