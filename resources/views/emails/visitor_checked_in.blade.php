@@ -40,7 +40,7 @@
     <div class="container">
         <h1>Visitor Check-In Notification</h1>
 
-        <p>Dear {{ $visitorName }},</p>
+        <p>Dear {{ $visit->visitor->first_name }} {{ $visit->visitor->last_name }},</p>
 
         <p>You have successfully checked in for your visit!</p>
 

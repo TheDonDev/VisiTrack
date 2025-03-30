@@ -36,23 +36,16 @@ class VisitController extends Controller
         }
 
         $visitor = Visitor::find($visit->visitor_id);
-        $host = Host::find($visit->host_id);
 
-        if(!$visitor || !$host){
+        if(!$visitor || !$visit->host){
             Log::error('Visitor or Host not found for visit', ['visit_number' => $visitNumber]);
             return redirect()->back()->with('error', 'Visitor or Host data not found.');
         }
 
-        // Log the host ID and email addresses for debugging
-        Log::info('Host ID: ' . $visit->host_id);
-        Log::info('Host Email: ' . ($host->email ?? 'No email found'));
-        Log::info('Visitor Email: ' . $visitor->email);
-
-
         // Check if email addresses are valid and log if they are missing
-        if (empty($host->email) || empty($visitor->email)) {
+        if (empty($visit->host->host_email) || empty($visitor->email)) {
             Log::error('Email address is missing for host or visitor', [
-                'host_email' => $host->email,
+                'host_email' => $visit->host->host_email,
                 'visitor_email' => $visitor->email,
             ]);
             return redirect()->back()->withErrors(['email' => 'Host or Visitor email address is missing.']);
@@ -60,20 +53,16 @@ class VisitController extends Controller
 
         // Send email notification to the host if the email is valid
         try {
-            Mail::to($host->email)->send(new HostVisitorCheckedIn($visit));
-
-            // Send email notification to the visitor
+            Mail::to($visit->host->host_email)->send(new HostVisitorCheckedIn($visit));
             Mail::to($visitor->email)->send(new VisitorCheckedIn($visit, $visitor));
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Check-in successful! Welcome, ' . $visitor->first_name . '.');
         } catch (\Exception $e) {
             Log::error('Error sending check-in emails:', ['exception' => $e]);
             return redirect()->back()->withErrors(['email' => 'Error sending email. Please try again later.']);
         }
-
-        // Redirect to the visit status page
-        return redirect()->route('visits.status', ['visit' => $visitNumber])
-            ->with('success', 'Check-in successful. Email notification sent to the host.');
     }
-
 
     public function showLoginForm()
     {
@@ -365,7 +354,7 @@ class VisitController extends Controller
                 Log::info("Attempting to redirect to visit status page with visit ID: " . $visit->id);
 
                 // Retrieve the host details
-                $host = Host::find($visit->host_id);
+                $host = Host::where('id', $visit->host_id)->first();
 
                 // Prepare data for the email
                 $emailData = [

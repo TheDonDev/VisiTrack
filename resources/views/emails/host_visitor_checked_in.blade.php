@@ -31,12 +31,12 @@
 <body>
     <div class="container">
         <h1>Visitor Checked In</h1>
-        <p>Hello {{ $visit->host->name }},</p>
-        <p>Your visitor, {{ $visit->visitor->name }}, has checked in successfully.</p>
+        <p>Hello {{ $visit->host->host_name }},</p>
+        <p>Your visitor, {{ $visit->visitor->first_name }} {{ $visit->visitor->last_name }}, has checked in successfully.</p>
         <div class="details">
             <h2>Visit Details:</h2>
             <p><strong>Visit Number:</strong> {{ $visit->visit_number }}</p>
-            <p><strong>Visitor Name:</strong> {{ $visit->visitor->name }}</p>
+            <p><strong>Visitor Name:</strong> {{ $visit->visitor->first_name }} {{ $visit->visitor->last_name }}</p>
             <p><strong>Designation:</strong> {{ $visit->visitor->designation }}</p>
             <p><strong>Organization:</strong> {{ $visit->visitor->organization }}</p>
             <p><strong>Email:</strong> {{ $visit->visitor->email }}</p>
