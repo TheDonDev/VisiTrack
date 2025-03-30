@@ -340,7 +340,7 @@ function handleLogin(event) {
         body: new FormData(form),
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Crucial line added here
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
     })
     .then(response => {

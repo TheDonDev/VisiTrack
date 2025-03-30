@@ -20,9 +20,9 @@ class AuthController extends Controller
 
         try {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect()->route('index')->with('success', 'Login successful!')->with('showVisitModal', true); // Redirect to show the visit number modal
+                return redirect()->route('index')->with('success', 'Login successful!')->with('showVisitModal', true);
             }
-            throw ValidationException::withMessages(['email' => 'Invalid credentials.']); // Throw exception for better error handling
+            throw ValidationException::withMessages(['email' => 'Invalid credentials.']);
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors());
         }
@@ -33,7 +33,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|unique:users,name',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed', // Ensure password is a string and confirmed
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::create([

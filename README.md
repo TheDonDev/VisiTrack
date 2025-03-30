@@ -1,6 +1,6 @@
 <p align="center">
   <a href="C:\Users\Test\DVMS\VisiTrack\public\images\Leonardo_Phoenix.jpg" target="_blank">
-    <img src="Leonardo_Phoenix.jpg" width="400" alt="VisiTrack">
+    <img src="public/images/Leonardo_Phoenix.jpg" width="400" alt="VisiTrack">
   </a>
 </p>
 
@@ -83,4 +83,4 @@ VisiTrack is open-sourced software licensed under the [MIT license](https://open
 
 ## Contact Information 📫
 
-For any inquiries or issues, please reach out to the maintainers at [donaldmwanga33@gmail.com.com](mailto:donaldmwanga33@gmail.com).
+For any inquiries or issues, please reach out to the maintainers at [donaldmwanga33@gmail.com](mailto:donaldmwanga33@gmail.com).
