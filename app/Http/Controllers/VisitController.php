@@ -43,10 +43,22 @@ class VisitController extends Controller
             return redirect()->back()->with('error', 'Visitor or Host data not found.');
         }
 
-        // Send email notification to the host
+        // Log the email addresses for debugging
+        Log::info('Host Email: ' . $host->email);
+        Log::info('Visitor Email: ' . $visitor->email);
+
+        // Check if email addresses are valid and log if they are missing
+        if (empty($host->email) || empty($visitor->email)) {
+            Log::error('Email address is missing for host or visitor', [
+                'host_email' => $host->email,
+                'visitor_email' => $visitor->email,
+            ]);
+            return redirect()->back()->withErrors(['email' => 'Host or Visitor email address is missing.']);
+        }
+
+        // Send email notification to the host if the email is valid
         try {
             Mail::to($host->email)->send(new HostVisitorCheckedIn($visit));
-            Mail::to($host->email)->send(new VisitorCheckedIn($visit, $visitor));
 
             // Send email notification to the visitor
             Mail::to($visitor->email)->send(new VisitorCheckedIn($visit, $visitor));

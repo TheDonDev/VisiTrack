@@ -54,4 +54,4 @@ Route::post('/signup', [AuthController::class, 'signup'])->name('security.signup
 
 // Visit Status Routes
 Route::post('/check-status', [VisitController::class, 'showVisitStatus'])->name('visits.status');
-Route::post('/process-check-in', [VisitController::class, 'handleCheckIn'])->name('visits.checkin');
+Route::post('/process-check-in', [VisitController::class, 'processCheckIn'])->name('visits.checkin');
