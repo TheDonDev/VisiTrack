@@ -29,6 +29,11 @@ class HostsTableSeeder extends Seeder
                 'host_email' => 'ckemboi548@gmail.com',
                 'host_number' => '0724460144'
             ],
+             [
+                'host_name' => 'Dr. Ashley Shisoko',
+                'host_email' => 'ckemboi54@gmail.com',
+                'host_number' => '0724460944'
+            ],
             [
                 'host_name' => 'Dr. Victor Mengwa',
                 'host_email' => 'vkirui@au.ac.ke',
@@ -38,6 +43,11 @@ class HostsTableSeeder extends Seeder
                 'host_name' => 'Dr. Pamela Nyongesa',
                 'host_email' => 'pnyongesa@au.ac.ke',
                 'host_number' => '0722334455'
+            ],
+             [
+                'host_name' => 'Dr. Daniel Muyobo Khaoya',
+                'host_email' => 'muyobod@gmail.com',
+                'host_number' => '0723606988'
             ],
             [
                 'host_name' => 'Dr. Caren Jerop',

@@ -110,12 +110,60 @@
                         <input type="time" id="visit-to" name="visit_to" class="border p-2 rounded w-full" required>
                     </div>
                     <textarea name="purpose_of_visit" placeholder="Purpose of Visit" class="border p-2 rounded w-full md:col-span-2" rows="2" required></textarea>
-                    <select name="host_id" class="border p-2 rounded w-full md:col-span-2" required>
-                        <option value="" disabled selected>Host's Name</option>
-                        @foreach($hosts as $host)
-                            <option value="{{ $host->id }}">{{ $host->host_name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative md:col-span-2">
+                        <input type="text" id="host-search" placeholder="Search for a host..." class="border p-2 rounded w-full">
+                        <input type="hidden" name="host_id" id="selected-host-id" required>
+                        <div id="host-results" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const hosts = {!! json_encode($hosts->map(fn($host) => ['id' => $host->id, 'name' => $host->host_name])) !!};
+                            const searchInput = document.getElementById('host-search');
+                            const resultsContainer = document.getElementById('host-results');
+                            const hiddenInput = document.getElementById('selected-host-id');
+
+                            searchInput.addEventListener('input', function() {
+                                const searchTerm = this.value.toLowerCase();
+                                resultsContainer.innerHTML = '';
+                                
+                                if (searchTerm.length > 0) {
+                                    const filteredHosts = hosts.filter(host => 
+                                        host.name.toLowerCase().includes(searchTerm)
+                                    );
+
+                                    if (filteredHosts.length > 0) {
+                                        filteredHosts.forEach(host => {
+                                            const div = document.createElement('div');
+                                            div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                                            div.textContent = host.name;
+                                            div.addEventListener('click', () => {
+                                                searchInput.value = host.name;
+                                                hiddenInput.value = host.id;
+                                                resultsContainer.classList.add('hidden');
+                                            });
+                                            resultsContainer.appendChild(div);
+                                        });
+                                        resultsContainer.classList.remove('hidden');
+                                    } else {
+                                        const div = document.createElement('div');
+                                        div.className = 'p-2 text-gray-500';
+                                        div.textContent = 'No hosts found';
+                                        resultsContainer.appendChild(div);
+                                        resultsContainer.classList.remove('hidden');
+                                    }
+                                } else {
+                                    resultsContainer.classList.add('hidden');
+                                }
+                            });
+
+                            // Hide results when clicking outside
+                            document.addEventListener('click', function(e) {
+                                if (!resultsContainer.contains(e.target) && e.target !== searchInput) {
+                                    resultsContainer.classList.add('hidden');
+                                }
+                            });
+                        });
+                    </script>
                 </div>
                 <!-- Submit and Cancel Buttons -->
                 <div class="flex justify-center gap-4 mt-4">
