@@ -30,8 +30,8 @@ class HostsTableSeeder extends Seeder
                 'host_number' => '0724460144'
             ],
              [
-                'host_name' => 'Dr. Ashley Shisoko',
-                'host_email' => 'ckemboi54@gmail.com',
+                'host_name' => 'Dr. Ashley Shisoka',
+                'host_email' => 'bshisoka@kibu.ac.ke',
                 'host_number' => '0724460944'
             ],
             [
