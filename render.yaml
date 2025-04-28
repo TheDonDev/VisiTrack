@@ -1,0 +1,94 @@
+# render.yaml
+# Blueprint for VisiTrack Laravel App on Render
+
+services:
+  #-------------------------------------
+  # Web Service (Laravel Application)
+  #-------------------------------------
+  - type: web
+    runtime: docker # Specify the runtime environment
+    name: visitrack-web # Choose a name for your web service
+    # Removed the invalid 'env' property
+    region: oregon # Or frankfurt, ohio, singapore - choose a region with free tiers
+    plan: free # Use the free instance type
+
+    # Build command: Installs dependencies, runs migrations, caches config
+    buildCommand: |
+      composer install --optimize-autoloader --no-dev --no-progress --prefer-dist
+      # Optional: If you have frontend assets built with npm/yarn
+      # npm install && npm run build
+      php artisan key:generate --force # Generate APP_KEY if not set in env vars (better to set manually)
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan migrate --force # Run migrations during build
+
+    # Start command: How Render starts your app (using Apache/Nginx via buildpack)
+    # The default heroku-php-apache2 usually works well for Laravel
+    startCommand: vendor/bin/heroku-php-apache2 public/
+
+    # Environment Variables (placeholders - set actual values in Render Dashboard)
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL # Set this later in the Render dashboard to your .onrender.com URL
+        value: https://visitrack.onrender.com # Replace with your actual Render URL
+      - key: APP_KEY # Strongly recommend generating locally (php artisan key:generate) and setting here
+        value: base64:YOUR_APP_KEY_HERE # Paste your generated key
+      - key: LOG_CHANNEL
+        value: stderr # Recommended for PaaS environments
+
+      # Database connection details (will use the group below)
+      - fromGroup: visitrack-db-credentials
+
+      # Add other .env variables your app needs (e.g., MAIL_*, etc.)
+      # - key: MAIL_MAILER
+      #   value: smtp
+      # - key: MAIL_HOST
+      #   value: your_smtp_host
+      # ... etc
+
+    # Optional: Persistent Disk for Storage (if your app saves files)
+    # Free tier includes a small amount of storage, but a disk ensures persistence
+    # Uncomment and configure if you need storage/app/public to persist across deploys
+    # disks:
+    #   - name: visitrack-storage
+    #     mountPath: /var/www/html/storage/app/public # Mount to the linked storage path
+    #     sizeGB: 1 # Smallest size
+
+  #-------------------------------------
+  # Database Service (PostgreSQL)
+  #-------------------------------------
+  - type: redis # Redis database
+    name: visitrack-db # Choose a name for your database service
+    region: oregon # Match the web service region if possible
+    plan: free # Use the free database plan
+    ipAllowList: # Specify allowed IPs for database access
+      - source: 0.0.0.0/0 # Allow all IPs (not recommended for production)
+
+#-------------------------------------
+# Environment Group (for shared DB credentials)
+#-------------------------------------
+envVarGroups:
+  - name: visitrack-db-credentials
+    envVars:
+      - key: DB_CONNECTION
+        value: pgsql # Use pgsql for PostgreSQL
+      - key: DB_HOST # Render provides this via internal service discovery
+        value: visitrack-db-host # Replace with the actual host value
+      - key: DB_PORT
+        value: 5432 # Default PostgreSQL port
+      - key: DB_CONNECTION
+        value: mysql # Use mysql for MySQL
+      - key: DB_HOST
+        value: visitrack-db-host # Replace with the actual host value
+      - key: DB_PORT
+        value: 3306 # Default MySQL port
+      - key: DB_DATABASE
+        value: visitrack-db-name # Replace with the actual database name
+      - key: DB_USERNAME
+        value: visitrack-db-user # Replace with the actual username
+      - key: DB_PASSWORD
+        value: visitrack-db-password # Replace with the actual password

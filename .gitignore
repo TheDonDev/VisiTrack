@@ -21,5 +21,3 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-app/Http/Middleware/
-render.yaml
